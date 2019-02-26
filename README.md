@@ -1,2 +1,2 @@
 # Joy_QA_Platform
-基于Django Web框架的接口测试平台
+基于HttpRunner、Locust、Django Web框架的接口测试/监控平台
