@@ -28,7 +28,8 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
 ```
 4. 安装redis，启动服务
 ```
-  redis-server
+  安装：brew install redis
+  启动：redis-server
 ```
 5. 配置redis
 ```
@@ -44,6 +45,8 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
   EMAIL_FROM = ''
 ```
 7. 压测相关配置
+
+  <font color=#A52A2A>此配置项在不使用压测功能时无需配置，locust相关配置主要用于主机和从机之间的资源测试用例分发，本地开发环境部署时不适用。</font>
 ```
   # locust 主机工作目录名配置
   LOCUST_WORKSPACE_DIR    = ''
@@ -64,6 +67,7 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
   SUPERUSER_PWD  = ''
 ```
 9. 安装项目依赖
+  安装依赖库之前，请确认xcode command line是否已正确安装
 ```
   命令行窗口执行pip install -r requirements.txt 安装工程所依赖的库文件，requirements.txt位于项目根目录
 ```
@@ -73,6 +77,7 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
   python manage.py makemigrations
   python manage.py migrate
 ```
+  请查看数据库，确认表结构正确创建
 11. 启动项目
   在项目根目录执行命令
 ```
@@ -90,3 +95,33 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
 ```
 14. 访问项目
   浏览器访问：http://127.0.0.1:8000/frame/login 进行注册、登录，开始使用测试平台
+15. 任务监控可以使用平台内的任务监控功能，也可通过flower自带的页面进行查看，若flower正确执行后可通过5555端口查看http://127.0.0.1:5555
+## 生产环境部署
+  生产环境部署依赖于uWSGI和Nginx，特别是主从机之间的用例同步功能，依赖于Nginx的权限控制功能以保证安全性。
+  需要注意的是：
+  
+        1、Django默认使用8000端口
+
+        2、压测locust默认使用8089端口
+
+        3、压测用例文件同步，不项目使用8095、8096端口
+
+        4、flower任务监控使用5555端口
+
+        请确保服务器以上端口开房，否则可能会影响相应功能使用
+1. 生产环境的部署与本地环境部署组件相似，请参照本地部署相应步骤进行
+2. configs.py的配置内容请参考本地部署相关说明，将本地地址、端口替换为服务器地址、端口即可
+3. uWSGI配置注意建议：
+
+        在平台项目目录下，创建uwsgi.ini、uwsgi.log、uwsig.pid三个文件，分别为配置文件、日志文件和进程号配置文件
+        在uwsgi.ini中配置uwsgi启动的相关参数，
+          http：指定端口
+          module：指定项目所用wsgi.py文件（相对路径）
+          chdir：指定工作目录（项目目录，此目录注意正确设置，否则会报找不到app）
+          limit-as：2048（默认512，限制uwsgi进程占用虚拟内存的最大值，超过则会报错）
+          pidfile：指定进程号配置文件（uwsgi.pid文件内配置指定进程号即可）
+          daemonize：后台运行模式，并将日志输出到指定的日志文件内
+          pythonpath：指定python路径
+              指定django路径  （此两条不指定，在wsgi.py中可能会报错找不到django等）
+          enable-threads：多线程开关，由于测试平台用到了celery和请打开多线程开关，并设置合理的线程数，否则当进行定时任务时，会卡死测试平台。
+          uwsgi运行过程中，若出现MemoryError错误，建议提高配置limit-as配置的值，配合reload-on-as = 1024配置使用（在达到1024的时候重启进程）
