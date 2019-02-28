@@ -139,4 +139,4 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
         
 5. Nginx配置注意事项：
 
-  主、从机之间的压测用例等文件同步使用了Linux的wget功能，并依赖Nginx的权限控制功能保证文件安全性，请合理配置私密文件相关Nginx代理的权限。
+        主、从机之间的压测用例等文件同步使用了Linux的wget功能，并依赖Nginx的权限控制功能保证文件安全性，请合理配置私密文件相关Nginx代理的权限。
