@@ -59,7 +59,34 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
 ```
 8. 默认管理员账号配置
 ```
-#默认管理员账号
-SUPERUSER_NAME = ''
-SUPERUSER_PWD  = ''
+  #默认管理员账号
+  SUPERUSER_NAME = ''
+  SUPERUSER_PWD  = ''
 ```
+9. 安装项目依赖
+```
+  命令行窗口执行pip install -r requirements.txt 安装工程所依赖的库文件，requirements.txt位于项目根目录
+```
+10. 生成数据库表
+  命令行窗口切换到项目根目录，执行Django相关命令生成表结构
+```
+  python manage.py makemigrations
+  python manage.py migrate
+```
+11. 启动项目
+  在项目根目录执行命令
+```
+  python manage.py runserver 0.0.0.0:8000
+```
+12. 启动Celery，用于执行用例任务
+  在项目根目录执行命令
+```
+  celery -A ApiManager.tasks worker -l info
+```
+13. 启动flower，用于任务执行的监控
+  在项目根目录执行命令，此处命令中redis地址、端口、账号等请自行更换
+```
+  flower --broker=redis://localhost:6379/0 --broker_api=redis://localhost:6379/0
+```
+14. 访问项目
+  浏览器访问：http://127.0.0.1:8000/frame/login 进行注册、登录，开始使用测试平台
