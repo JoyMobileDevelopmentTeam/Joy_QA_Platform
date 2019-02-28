@@ -111,7 +111,9 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
         请确保服务器以上端口开房，否则可能会影响相应功能使用
 1. 生产环境的部署与本地环境部署组件相似，请参照本地部署相应步骤进行
 2. configs.py的配置内容请参考本地部署相关说明，将本地地址、端口替换为服务器地址、端口即可
-3. uWSGI配置注意建议：
+3. 安装uWSGI，配置使用其启动项目
+    
+    启动服务uWSGI配置注意建议：
 
         在平台项目目录下，创建uwsgi.ini、uwsgi.log、uwsig.pid三个文件，分别为配置文件、日志文件和进程号配置文件
         在uwsgi.ini中配置uwsgi启动的相关参数，
@@ -125,3 +127,16 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
               指定django路径  （此两条不指定，在wsgi.py中可能会报错找不到django等）
           enable-threads：多线程开关，由于测试平台用到了celery和请打开多线程开关，并设置合理的线程数，否则当进行定时任务时，会卡死测试平台。
           uwsgi运行过程中，若出现MemoryError错误，建议提高配置limit-as配置的值，配合reload-on-as = 1024配置使用（在达到1024的时候重启进程）
+          
+          参考：
+          https://uwsgi-docs.readthedocs.io/en/latest/
+          https://blog.csdn.net/wangpeng2011314/article/details/82527613
+4. 安装Nginx，配置、启动代理服务
+
+        代理80端口至8000端口--Django端口，可修改
+        代理项目中static目录下的静态资源
+        代理项目中slave目录下的压测相关文件--请确保此目录Nginx代理有进行权限控制，否则可能有文件泄露的风险。
+        
+5. Nginx配置注意事项：
+
+  主、从机之间的压测用例等文件同步使用了Linux的wget功能，并依赖Nginx的权限控制功能保证文件安全性，请合理配置私密文件相关Nginx代理的权限。
