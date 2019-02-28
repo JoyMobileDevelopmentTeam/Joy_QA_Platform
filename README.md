@@ -72,14 +72,12 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
   命令行窗口执行pip install -r requirements.txt 安装工程所依赖的库文件，requirements.txt位于项目根目录
 ```
 10. 生成数据库表
-  命令行窗口切换到项目根目录，执行Django相关命令生成表结构
+  命令行窗口切换到项目根目录，执行Django相关命令生成表结构,请查看数据库，确认表结构正确创建
 ```
   python manage.py makemigrations
   python manage.py migrate
 ```
-  请查看数据库，确认表结构正确创建
-11. 启动项目
-  在项目根目录执行命令
+11. 启动项目 在项目根目录执行命令
 ```
   python manage.py runserver 0.0.0.0:8000
 ```
