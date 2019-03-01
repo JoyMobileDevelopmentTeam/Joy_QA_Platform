@@ -1,0 +1,463 @@
+"""
+Python job scheduling for humans.
+
+github.com/dbader/schedule
+
+An in-process scheduler for periodic jobs that uses the builder pattern
+for configuration. Schedule lets you run Python functions (or any other
+callable) periodically at pre-determined intervals using a simple,
+human-friendly syntax.
+
+Inspired by Addam Wiggins' article "Rethinking Cron" [1] and the
+"clockwork" Ruby module [2][3].
+
+Features:
+    - A simple to use API for scheduling jobs.
+    - Very lightweight and no external dependencies.
+    - Excellent test coverage.
+    - Works with Python 2.7 and 3.3
+
+Usage:
+    >>> import schedule
+    >>> import time
+
+    >>> def job(message='stuff'):
+    >>>     print("I'm working on:", message)
+
+    >>> schedule.every(10).minutes.do(job)
+    >>> schedule.every(5).to(10).days.do(job)
+    >>> schedule.every().hour.do(job, message='things')
+    >>> schedule.every().day.at("10:30").do(job)
+
+    >>> while True:
+    >>>     schedule.run_pending()
+    >>>     time.sleep(1)
+
+[1] https://adam.herokuapp.com/past/2010/4/13/rethinking_cron/
+[2] https://github.com/Rykian/clockwork
+[3] https://adam.herokuapp.com/past/2010/6/30/replace_cron_with_clockwork/
+"""
+import collections
+import datetime
+import functools
+import logging
+import random
+import time
+import os
+import threading
+import pickle
+
+from django.core.cache import cache
+
+logger = logging.getLogger('schedule')
+
+
+class Scheduler(object):
+    """
+    Objects instantiated by the :class:`Scheduler <Scheduler>` are
+    factories to create jobs, keep record of scheduled jobs and
+    handle their execution.
+    """
+
+    def __init__(self):
+        self.jobs = []
+        # 加锁，避免重复执行
+        self.mutex = threading.Lock()
+
+    def getJobs(self):
+        jobs = []
+        for key in cache.keys("qa_paltform_loop_jobs_*"):
+            jobs.append(pickle.loads(cache.get(key)))
+        return jobs
+
+    def cacheJob(self,job):
+        with cache.lock("qa_test_platform_set"):
+            # print("增加缓存")
+            cache.set("loop_jobs",pickle.dumps(job),timeout=None)
+
+    def cancelJob(self,task_id):
+        # print("尝试停止任务")
+        with cache.lock("qa_test_platform_cancel"):
+            for key in cache.keys("qa_paltform_loop_jobs_*"):
+                job = pickle.loads(cache.get(key))
+                # print(job.task_id)
+                if job.task_id == task_id:
+                    # print("删除id,",job.task_id)
+                    cache.delete_pattern(key)
+
+    def run_pending(self):
+        """
+        Run all jobs that are scheduled to run.
+
+        Please note that it is *intended behavior that run_pending()
+        does not run missed jobs*. For example, if you've registered a job
+        that should run every minute and you only call run_pending()
+        in one hour increments then your job won't be run 60 times in
+        between but only once.
+        """
+        with cache.lock("qa_test_platform_get"):
+            runnable_jobs = (job for job in self.getJobs() if job.should_run)
+            with self.mutex:
+                for job in sorted(runnable_jobs):
+                    now = datetime.datetime.now()
+                    if job.last_run is None:
+                        self._run_job(job)
+                        job.last_run = datetime.datetime.now()
+                        # print("上次执行时间为空，执行！")
+                        continue
+                    if (now - job.last_run).total_seconds() > 50:
+                        job.last_run = datetime.datetime.now()
+                        self._run_job(job)
+                        # print("执行任务")
+                    else:
+                        # print("上次执行时间非常近，跳过")
+                        pass
+
+    def run_continuously(self, interval=1):
+        """Continuously run, while executing pending jobs at each elapsed
+        time interval.
+        @return cease_continuous_run: threading.Event which can be set to
+        cease continuous run.
+        Please note that it is *intended behavior that run_continuously()
+        does not run missed jobs*. For example, if you've registered a job
+        that should run every minute and you set a continuous run interval
+        of one hour then your job won't be run 60 times at each interval but
+        only once.
+        """
+        cease_continuous_run = threading.Event()
+
+        class ScheduleThread(threading.Thread):
+            @classmethod
+            def run(cls):
+                while not cease_continuous_run.is_set():
+                    self.run_pending()
+                    time.sleep(interval)
+
+        continuous_thread = ScheduleThread()
+        print("起线程")
+        continuous_thread.start()
+        return cease_continuous_run
+
+    def run_all(self, delay_seconds=0):
+        """
+        Run all jobs regardless if they are scheduled to run or not.
+
+        A delay of `delay` seconds is added between each job. This helps
+        distribute system load generated by the jobs more evenly
+        over time.
+
+        :param delay_seconds: A delay added between every executed job
+        """
+        logger.info('Running *all* %i jobs with %is delay inbetween',
+                    len(self.jobs), delay_seconds)
+        for job in self.jobs[:]:
+            self._run_job(job)
+            time.sleep(delay_seconds)
+
+    def clear(self, tag=None):
+        """
+        Deletes scheduled jobs marked with the given tag, or all jobs
+        if tag is omitted.
+
+        :param tag: An identifier used to identify a subset of
+                    jobs to delete
+        """
+        if tag is None:
+            del self.jobs[:]
+        else:
+            self.jobs[:] = (job for job in self.jobs if tag not in job.tags)
+
+    def cancel_job(self, task_id):
+        """
+        Delete a scheduled job.
+
+        :param job: The job to be unscheduled
+        """
+        try:
+            self.cancelJob(task_id)
+        except ValueError:
+            pass
+
+    def every(self, interval=1):
+        """
+        Schedule a new periodic job.
+
+        :param interval: A quantity of a certain time unit
+        :return: An unconfigured :class:`Job <Job>`
+        """
+        job = Job(interval)
+        return job
+
+    def _run_job(self, job):
+        ret = job.run()
+        # 缓存job最新的执行时间
+        for key in cache.keys("qa_paltform_loop_jobs_*"):
+            old_job = pickle.loads(cache.get(key))
+            if job.task_id == old_job.task_id:
+                cache.delete_pattern(key)
+                cache.set(key,pickle.dumps(job),timeout=None)
+
+
+    @property
+    def next_run(self):
+        """
+        Datetime when the next job should run.
+
+        :return: A :class:`~datetime.datetime` object
+        """
+        if not self.jobs:
+            return None
+        return min(self.jobs).next_run
+
+    @property
+    def idle_seconds(self):
+        """
+        :return: Number of seconds until
+                 :meth:`next_run <Scheduler.next_run>`.
+        """
+        return (self.next_run - datetime.datetime.now()).total_seconds()
+
+
+class Job(object):
+    def __init__(self, interval):
+        self.interval = interval  # pause interval * unit between runs
+        self.latest = None  # upper limit to the interval
+        self.at_time = None  # optional time at which this job runs
+        self.job_func = None  # the job job_func to run
+        self.unit = None  # time units, e.g. 'minutes', 'hours', ...
+        self.last_run = None  # datetime of the last run
+        self.next_run = None  # datetime of the next run
+        self.period = None  # timedelta between runs, only valid for
+        self.start_day = None  # Specific day of the week to start on
+        self.task_id = None
+
+    def __repr__(self):
+        return "Job(%s-%s-%s-%s-%s)"%(self.interval,self.unit,self.last_run,self.next_run,self.task_id)
+
+    def __lt__(self, other):
+        """
+        PeriodicJobs are sortable based on the scheduled time they
+        run next.
+        """
+        return self.next_run < other.next_run
+
+    @property
+    def second(self):
+        assert self.interval == 1, 'Use seconds instead of second'
+        return self.seconds
+
+    @property
+    def seconds(self):
+        self.unit = 'seconds'
+        return self
+
+    @property
+    def minute(self):
+        assert self.interval == 1, 'Use minutes instead of minute'
+        return self.minutes
+
+    @property
+    def minutes(self):
+        self.unit = 'minutes'
+        return self
+
+    @property
+    def hour(self):
+        assert self.interval == 1, 'Use hours instead of hour'
+        return self.hours
+
+    @property
+    def hours(self):
+        self.unit = 'hours'
+        return self
+
+    @property
+    def day(self):
+        assert self.interval == 1, 'Use days instead of day'
+        return self.days
+
+    @property
+    def days(self):
+        self.unit = 'days'
+        return self
+
+    @property
+    def week(self):
+        assert self.interval == 1, 'Use weeks instead of week'
+        return self.weeks
+
+    @property
+    def weeks(self):
+        self.unit = 'weeks'
+        return self
+
+    @property
+    def monday(self):
+        assert self.interval == 1, 'Use mondays instead of monday'
+        self.start_day = 'monday'
+        return self.weeks
+
+    @property
+    def tuesday(self):
+        assert self.interval == 1, 'Use tuesdays instead of tuesday'
+        self.start_day = 'tuesday'
+        return self.weeks
+
+    @property
+    def wednesday(self):
+        assert self.interval == 1, 'Use wedesdays instead of wednesday'
+        self.start_day = 'wednesday'
+        return self.weeks
+
+    @property
+    def thursday(self):
+        assert self.interval == 1, 'Use thursday instead of thursday'
+        self.start_day = 'thursday'
+        return self.weeks
+
+    @property
+    def friday(self):
+        assert self.interval == 1, 'Use fridays instead of friday'
+        self.start_day = 'friday'
+        return self.weeks
+
+    @property
+    def saturday(self):
+        assert self.interval == 1, 'Use saturdays instead of saturday'
+        self.start_day = 'saturday'
+        return self.weeks
+
+    @property
+    def sunday(self):
+        assert self.interval == 1, 'Use sundays instead of sunday'
+        self.start_day = 'sunday'
+        return self.weeks
+
+    def do(self, job_func, *args, **kwargs):
+        """
+        Specifies the job_func that should be called every time the
+        job runs.
+
+        Any additional arguments are passed on to job_func when
+        the job runs.
+
+        :param job_func: The function to be scheduled
+        :return: The invoked job instance
+        """
+        self.job_func = functools.partial(job_func, *args, **kwargs)
+        self.task_id = kwargs["task_id"]
+        try:
+            functools.update_wrapper(self.job_func, job_func)
+        except AttributeError:
+            # job_funcs already wrapped by functools.partial won't have
+            # __name__, __module__ or __doc__ and the update_wrapper()
+            # call will fail.
+            pass
+        self._schedule_next_run()
+        return self
+
+    @property
+    def should_run(self):
+        """
+        :return: ``True`` if the job should be run now.
+        """
+        return datetime.datetime.now() >= self.next_run
+
+    def run(self):
+        """
+        Run the job and immediately reschedule it.
+
+        :return: The return value returned by the `job_func`
+        """
+        logger.info('Running job %s', self)
+        ret = self.job_func()
+        self.last_run = datetime.datetime.now()
+        self._schedule_next_run()
+        return ret
+
+    def _schedule_next_run(self):
+        """
+        Compute the instant when this job should run next.
+        """
+        assert self.unit in ('seconds', 'minutes', 'hours', 'days', 'weeks')
+
+        if self.latest is not None:
+            assert self.latest >= self.interval
+            interval = random.randint(self.interval, self.latest)
+        else:
+            interval = self.interval
+
+        self.period = datetime.timedelta(**{self.unit: interval})
+        self.next_run = datetime.datetime.now() + self.period
+        if self.start_day is not None:
+            assert self.unit == 'weeks'
+            weekdays = (
+                'monday',
+                'tuesday',
+                'wednesday',
+                'thursday',
+                'friday',
+                'saturday',
+                'sunday'
+            )
+            assert self.start_day in weekdays
+            weekday = weekdays.index(self.start_day)
+            days_ahead = weekday - self.next_run.weekday()
+            if days_ahead <= 0:  # Target day already happened this week
+                days_ahead += 7
+            self.next_run += datetime.timedelta(days_ahead) - self.period
+        if self.at_time is not None:
+            assert self.unit in ('days', 'hours') or self.start_day is not None
+            kwargs = {
+                'minute': self.at_time.minute,
+                'second': self.at_time.second,
+                'microsecond': 0
+            }
+            if self.unit == 'days' or self.start_day is not None:
+                kwargs['hour'] = self.at_time.hour
+            self.next_run = self.next_run.replace(**kwargs)
+            # If we are running for the first time, make sure we run
+            # at the specified time *today* (or *this hour*) as well
+            if not self.last_run:
+                now = datetime.datetime.now()
+                if (self.unit == 'days' and self.at_time > now.time() and
+                        self.interval == 1):
+                    self.next_run = self.next_run - datetime.timedelta(days=1)
+                elif self.unit == 'hours' and self.at_time.minute > now.minute:
+                    self.next_run = self.next_run - datetime.timedelta(hours=1)
+        if self.start_day is not None and self.at_time is not None:
+            # Let's see if we will still make that time we specified today
+            if (self.next_run - datetime.datetime.now()).days >= 7:
+                self.next_run -= self.period
+
+
+default_scheduler = Scheduler()
+
+def every(interval=1):
+    """Calls :meth:`every <Scheduler.every>` on the
+    :data:`default scheduler instance <default_scheduler>`.
+    """
+    return default_scheduler.every(interval)
+
+
+def run_continuously():
+    default_scheduler.run_continuously()
+
+
+def cancel_job(task_id):
+    """Calls :meth:`cancel_job <Scheduler.cancel_job>` on the
+    :data:`default scheduler instance <default_scheduler>`.
+    """
+    default_scheduler.cancel_job(task_id)
+
+
+
+    
+
+
+
+
+
+
+
+
