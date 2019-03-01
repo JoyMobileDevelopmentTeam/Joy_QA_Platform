@@ -1,0 +1,76 @@
+{% extends 'frame/base.html' %} {% load staticfiles %} {% block title_block %} 权限管理 {% endblock %}
+{% block mystyle_css %}
+    <style type="text/css">
+        .todo-list > li p {
+            width: 100%;
+            padding: 15px 0 10px 35px;
+        }
+    </style>
+{% endblock %}
+{% block body_block %}
+    <div class="main">
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <span class="ion-md-flag" id="title">权限管理</span>
+                        </div>
+                        <hr style="FILTER: alpha(opacity=100,finishopacity=0,style=3);margin-top: 0px;" width="100%"
+                            color=#987cb9 SIZE=3>
+                        <div class="layui-container">
+                            <div class="layui-row">
+                                <div class="layui-col-md6 layui-col-md-offset1">
+                                    <!-- 此扩展能递归渲染一个权限树，点击深层次节点，父级节点中没有被选中的节点会被自动选中，单独点击父节点，子节点会全部 选中/去选中 -->
+                                    <form class="layui-form">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">选择用户</label>
+                                            <div class="layui-input-block">
+                                                <select type='select' name="select_user" class="form-control"
+                                                        id="select_user" lay-filter="LAY-select-user-change">
+                                                    <option value="-1">请选择用户</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">选择权限</label>
+                                            <div class="layui-input-block">
+                                                <div>
+                                                    <input type="checkbox" name="is_superuser" id="is_superuser">管理员
+                                                </div>
+                                                <div>
+                                                    <input type="checkbox" value="ApiManager.add_projectinfo" name="add_checkbox">新增项目&nbsp&nbsp&nbsp
+                                                    <input type="checkbox" value="ApiManager.add_moduleinfo" name="add_checkbox">新增模块&nbsp&nbsp&nbsp
+                                                    <input type="checkbox" value="ApiManager.add_testcaseinfo" name="add_checkbox">新增用例&nbsp&nbsp&nbsp
+                                                    <input type="checkbox" value="ApiManager.add_taskinfo" name="add_checkbox">新增任务&nbsp&nbsp&nbsp
+                                                </div>
+                                                <div id="LAY-auth-tree-index"></div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button class="layui-btn" type="submit" lay-submit
+                                                        lay-filter="LAY-auth-tree-submit">提交
+                                                </button>
+                                                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static '/frame/js/utils.js' %}"></script>
+    <script src="{% static '/api/js/netutils.js' %}"></script>
+    <script src="{% static '/api/js/commons.js' %}"></script>
+    <script src="{% static '/layui/layui.js' %}"></script>
+    <script src="{% static '/api/js/auth.js' %}"></script>
+    <link rel="stylesheet" href="{% static '/layui/css/layui.css' %}"/>
+    <link rel="stylesheet/less" href="{% static '/api/less/auth.less' %}"/>
+    <!-- END MAIN CONTENT -->
+{% endblock %}

@@ -1,0 +1,44 @@
+{% load staticfiles %}
+<!-- NAVBAR -->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <!-- <div class="brand">
+        <a href="/frame/index"><img src="{% static '/frame/img/alphalogo.png' %}" alt="Alpha Logo"
+                                    class="img-responsive logo"></a>
+    </div> -->
+    <p id="indextitle">卓游测试平台</p>
+    <div class="container-fluid">
+        <div id="navbar-menu">
+            <ul class="navbar-btn" style="padding-bottom: 0px;padding-top: 10px; margin-top: 5px; margin-bottom: 15px;">
+                <!-- <button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle"></i></button> -->
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
+                        <ul class="dropdown-menu notifications" id="new_msg_all">
+                            <li><a href="" class="more">查看所有消息</a></li>
+                        </ul>
+                    </a>
+                </li>
+                <li class="dropdown" style="display: none">
+                    <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown" id="onlineusers_button"
+                       title="当前在线人数">
+                        <i class="lnr lnr-users"></i>
+                        <span class="badge bg-success" id='onlineusers_num'>1</span>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown" id="uuser">
+                        <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i>
+                        <span>{{ request.user.username }}</span>
+                        <i class="icon-submenu lnr lnr-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li style="display: none;"><a href="#"><i class="lnr lnr-lock"></i> <span>锁屏</span></a></li>
+                        <li style="display: none;"><a href="#"><i class="lnr lnr-question-circle"></i> <span>帮助</span></a></li>
+                        <li><a href="#" id="logout"><i class="lnr lnr-exit"></i> <span>注销</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- END NAVBAR -->

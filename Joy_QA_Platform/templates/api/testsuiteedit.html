@@ -1,0 +1,55 @@
+{% extends 'frame/base.html' %}
+{% load staticfiles %}
+{% load frame_tags %}
+{% load apiauto_tags %}
+{% block title_block %}
+	测试集编辑
+{% endblock %}
+
+{% block body_block %}
+<div class="main">
+	<!-- MAIN CONTENT -->
+	<div class="main-content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-8">
+					<div class="panel">
+						<div class="panel-heading" style="padding-bottom: 0;">
+							<div class="right">
+								<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
+							</div>
+							<div class="custom-tabs-line tabs-line-bottom left-aligned">
+								<ul class="nav" role="tablist">
+									<li class="active"><a href="#tab-bottom-edittestsuite" role="tab" data-toggle="tab">测试集编辑</span></a></li>			
+								</ul>
+							</div>
+						</div>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="tab-bottom-edittestsuite" style="padding-top: 0;">
+								<div class="panel-body">
+									<input id="testsuite_id" value="{{targettestsuite.id}}" type="hidden">
+									<input type="text" class="form-control" placeholder="测试集名称" name="testsuite_name" id="testsuite_name" value="{{targettestsuite.testsuite_name}}"><br>                                                                         
+                                    <select class="form-control" id="testsuite_project" name="testsuite_project" required="true">
+                                        <option value="" disabled selected>&minus;&minus;&minus;所属项目&minus;&minus;&minus;</option>
+                                        {% for project in project_list %} 
+                                            <option value="{{project.id}}" {% ifequal project.id targettestsuite.testsuite_project.id %} selected="true"{% endifequal %}>{{project.project_name}}</option>
+                                        {% endfor %}
+                                    </select><br>                                                    
+									<textarea class="form-control" placeholder="测试集描述（选填）" rows="4" name="testsuite_desc" id="testsuite_desc">{{targettestsuite.testsuite_desc|default:""}}</textarea><br>
+								</div>
+								<div class="panel-footer" style="border: 0;">
+									<div class="text-center">
+										<div class="btn btn-default" id="edittestsuitesaveajax">保存</div>
+									</div>		
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END MAIN CONTENT -->
+{% endblock %}
+

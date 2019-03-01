@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" class="fullscreen-bg">
+
+<head>
+    <title>
+    	卓游测试平台 | 锁屏
+    </title>
+	{% include './base_head.html' %}
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<div class="vertical-align-wrap">
+			<div class="vertical-align-middle">
+				<div class="auth-box lockscreen clearfix">
+					<div class="content">
+						<div class="logo text-center"><h1>已锁定</h1></div>
+						<div class="user text-center">
+							<i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
+							<h2 class="name">{{username}}</h2>
+						</div>
+							<div class="input-group">
+								<input id="username" type="hidden" name="username" value={{username}} />
+								<input id="password" type="password" name="password" class="form-control" placeholder="输入密码以解锁 ...">
+								<span class="input-group-btn"><button id="unlockbutton" type="submit" class="btn btn-primary"><i class="fa fa-arrow-right"></i></button></span>
+							</div>
+						<br>
+						<div id = "tips" class="unlockmsg" style="text-align: center;">
+							<div  id="success" class="alert alert-success alert-dismissible" role="alert" style="display: none">
+								<i class="fa fa-check-circle"></i> 
+							</div>
+
+							<div id="warning" class="alert alert-warning alert-dismissible" role="alert" style="display: none">
+								<i class="fa fa-warning"></i> 
+							</div>
+
+							<div id="danger" class="alert alert-danger alert-dismissible" role="alert" style="display: none">
+								<i class="fa fa-times-circle"></i> 
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END WRAPPER -->
+
+	<!-- TOASTR -->
+	<div id="toastr-lock" >
+		<!-- CONTEXTUAL -->
+	</div>
+	<!-- END TOASTR -->
+
+	<!-- Javascript --> 
+	{% include './base_js.html' %}
+</body>
+
+</html>
+

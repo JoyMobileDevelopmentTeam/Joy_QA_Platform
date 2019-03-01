@@ -1,0 +1,123 @@
+{% extends 'frame/base.html' %} {% load staticfiles %} {% block title_block %} 任务新建 {% endblock %}
+{% block mystyle_css %}
+    <style type="text/css">
+        .todo-list > li p {
+            width: 100%;
+            padding: 15px 0 10px 35px;
+        }
+    </style>
+{% endblock %} {% block body_block %}
+    <div class="main">
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <span class="ion-md-flag" id="title">新增任务</span>
+                            </div>
+                            <hr style="FILTER: alpha(opacity=100,finishopacity=0,style=3);margin-top: 0px;" width="100%"
+                                color=#987cb9 SIZE=3>
+                            <div class="fbneirong">
+                                <form class="form-horizontal" id="add_task">
+                                    <div class="form-group  has-feedback">
+                                        <label class="control-label col-md-2 text-primary"
+                                               for="task_name">任务名称：</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" id="task_name"
+                                                   aria-describedby="inputSuccess3Status" name="task_name"
+                                                   placeholder="请输入任务名称" value="">
+                                            <span class="glyphicon glyphicon-tasks form-control-feedback"
+                                                  aria-hidden="true"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  has-feedback">
+                                        <label class="control-label col-md-2 text-primary"
+                                               for="belong_env">运行环境：</label>
+                                        <div class="col-md-5">
+                                            <select id="belong_env" name="belong_env" class="form-control">
+                                                <option value="-1" selected>请选择</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  has-feedback">
+                                        <label class="control-label col-md-2 text-primary" for="test_user">项目：</label>
+                                        <div class="col-md-5">
+                                            <select id="belong_project" name="belong_project" class="form-control">
+                                                <option value="-1" selected>请选择</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  has-feedback">
+                                        <label class="control-label col-md-2 text-primary" for="dev_user">模块：</label>
+                                        <div class="col-md-5">
+                                            <select id="belong_module" name="belong_module" class="form-control">
+                                                <option value="-1" selected>请选择</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  has-feedback">
+                                        <label class="control-label col-md-2 text-primary"
+                                               for="receiver_email">接收邮箱：</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" id="receiver_email"
+                                                   name="receiver_email"
+                                                   aria-describedby="inputSuccess3Status" placeholder="请输入企业邮箱（多个邮箱以;间隔）"
+                                                   value="">
+                                            <span class="glyphicon glyphicon-envelope form-control-feedback"
+                                                  aria-hidden="true"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  has-feedback">
+                                        <label class="control-label col-md-2 text-primary"
+                                               for="case_list">用例列表：</label>
+                                        <div class="col-md-5">
+                                            <select id="case_list" name="case_list" class="form-control"
+                                                    multiple="multiple">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  has-feedback">
+                                        <label class="control-label col-md-2 text-primary"
+                                               for="time_config">定时配置：</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" id="start_time" name="start_time"
+                                                   aria-describedby="inputSuccess3Status" placeholder="请选择任务开始执行时间"
+                                                   readonly>
+                                            <span class="glyphicon glyphicon-time form-control-feedback"
+                                                  aria-hidden="true"></span>
+                                            <div style="margin:10px 0px 10px 0px">
+                                                <button type="button" class="btn btn-danger btn-sm" id="is_loop"
+                                                        value=false>不循环
+                                                </button>
+                                                天:<select id="interval_day" class="interval" disabled></select>
+                                                小时:<select id="interval_hour" class="interval" disabled></select>
+                                                分钟:<select id="interval_minute" class="interval" disabled></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="am-form-group am-cf">
+                                        <div class="you" style="margin-left: 8%;">
+                                            <button type="button" class="btn btn-success btn-sm" id="send">点 击 提 交
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static '/frame/js/utils.js' %}"></script>
+    <script src="{% static '/api/js/bootstrap-multiselect.js' %}"></script>
+    <script src="{% static '/api/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static '/api/js/netutils.js' %}"></script>
+    <script src="{% static '/api/js/task_new.js' %}"></script>
+    <link rel="stylesheet" href="{% static '/api/css/bootstrap-multiselect.css' %}"/>
+    <link rel="stylesheet" href="{% static '/api/css/bootstrap-datetimepicker.min.css' %}"/>
+    <link rel="stylesheet/less" href="{% static '/api/less/task_new.less' %}"/>
+    <!-- END MAIN CONTENT -->
+{% endblock %}

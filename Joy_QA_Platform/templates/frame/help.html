@@ -1,0 +1,154 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <!-- ICONS -->
+        <link rel="apple-touch-icon" sizes="76x76" href="{% static '/frame/img/apple-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{% static '/frame/img/favicon.png' %}">
+        <title>卓游测试平台 | 帮助</title>
+        <link href="{% static '/frame/vendor/prettydoc/css/googleapis.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static '/frame/vendor/prettydoc/css/style.css' %}" rel="stylesheet" >
+        <link href="{% static '/frame/vendor/prettydoc/css/prettify.css' %}" rel="stylesheet" >
+
+        <style type="text/css">
+            #copyright{
+                font-size: 14px;
+            }
+            .lone-header{
+              padding-left: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+        <nav>
+            <div class="pull-left">
+              <h1><a href="{% url 'frame:index' %}"><span>&larr;&nbsp;</span></a></h1>
+            </div>
+            <div class="pull-right">
+              <a href="#" class="btn btn-download"><img src="{% static '/frame/vendor/prettydoc/admin.png' %}" width="25"/>wuwei@joygames.cc</a>
+            </div>
+        </nav>
+        <header>
+          <div class="container">
+            <h2 class="lone-header">卓游测试平台帮助文档</h2>
+          </div>
+        </header>
+        <section>
+          <div class="container">
+            <ul class="docs-nav">
+              <li><strong>目录</strong></li>
+              <li><a href="#Adminuser" class="cc-active">管理员</a></li>
+              <li><a href="#Now" class="cc-active">现在</a></li>
+              <li><a href="#Future" class="cc-active">将来</a></li>
+            </ul>
+            <div class="docs-content">
+              <h3 id="Adminuser">管理员</h3>
+                <ul>
+                  <li><h5>如需帮助，请联系平台管理员: wuwei@joygames.cc</h5></li>
+                  <li><h5>如果他不回复，请直接工位上找他</h5></li>
+                </ul>
+              <h3 id="Now">现在</h3>
+                <ul>
+                  <li>
+                    <h4>Django</h4>
+                    <h5>基于Django框架，学习曲线平滑，简单易上手，方便更多人快速加入项目开发，同时具有高效、安全、可扩展等优势</h5>
+                  </li>
+                  <li>
+                    <h4>Django Channels</h4>
+                    <h5>为项目引入Socket通信能力，将Django由简单的HTTP扩展为支持实时通信，可以后端推送消息、可以和AJAX配合动态局部更新前端页面、可以配合异步任务队列实现更好的用户体验，可以&hellip;&hellip;</h5>
+                  </li>
+                  <li>
+                    <h4>Celery</h4>
+                    <h5>引入Celery这个简单、灵活、可靠的分布式队列管理工具，扩展实时任务队列、任务处理、任务调度、定时任务等能力，</h5>
+                  </li>
+                  <li>
+                    <h4>MySQL</h4>
+                    <h5>提供Django DB与数据持久化等支持</h5>
+                  </li>
+                  <li>           
+                    <h4>Redis</h4>
+                    <h5>提供消息队列、缓存等支持</h5>                  
+                  </li>
+                  <li>
+                    <h4>Some Vendors</h4>
+                    <h5>开发过程中，引入了一些简单、好看、有趣的插件，比如：</h5>
+                      <ul>
+                        <li>
+                        <h5>表格 - TableTools</h5>
+                      <pre class="prettyprint">
+&lt;script&gt;
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+&lt;/script&gt;</pre>  
+                        </li>                        
+                        <li>
+                        <h5>提示 - Toastrjs</h5>
+                      <pre class="prettyprint">
+&lt;script&gt;
+    toastr.options.timeOut = "30000";
+    toastr.options.positionClass =  "toast-bottom-right"
+    toastr.options.closeButton = true;
+    toastr['info']('Hi ' + celerymsg_receiver_username+ ', '+'&nbsp;  &#91; &nbsp;' + celerymsg_title +' &nbsp; &#93; Finished. &nbsp; <a href="/apiauto/testcases/">View It</a>');
+&lt;/script&gt;</pre>  
+                        </li>
+                        <li>
+                        <h5>通知 - Zebra_Tooltips</h5>
+                      <pre class="prettyprint">
+&lt;script&gt;
+    new $.Zebra_Tooltips($('#onlineusers_button'), {
+      'color': '#3c763d',
+      'background_color': '#dff0d8',
+      'border_color': '#d6e9c6',
+      'opacity': 0.8,
+      'max_width':    300
+    });
+&lt;/script&gt;</pre> 
+                        </li>
+                        <li>
+                        <h5>下拉选项框 - Selectivity</h5>
+                      <pre class="prettyprint">
+&lt;script&gt;
+    $('#testcase_select').selectivity({
+        allowClear: false,
+        // multiple:true,
+        items: all_project_testsuites_list,
+        placeholder: '---所属测试集---',
+        value:selected_testsuite_id,
+    });
+&lt;/script&gt;</pre> 
+                        </li>
+                        <li>
+                          <h5>其他</h5>
+                        </li>
+                      </ul>
+                  </li>
+              </ul>
+              <h3 id="Future">将来</h3>
+                <ul>
+                  <li><h5>需要一个平台，能够管理测试脚本，能够主动执行、HOOK触发执行、Crontab定时任务执行</h5></li>
+                  <li><h5>需要一个平台，能够管理测试设备，能够远程下发WEB/APP自动化测试脚本，能够收集测试结果</h5></li>
+                  <li><h5>需要一个平台，能够管理监控服务的可用性，在服务异常时及时告警</h5></li>
+                  <li><h5>需要一个平台，能够对测试数据、服务器日志、用户操作进行分析，并图形化展示</h5></li>
+                  <li><h5>需要一个平台，能够远程调试服务器，并执行脚本</h5></li>
+                  <li><h5>需要一个平台，能够傻瓜化进行压力测试、通用化的安全性测试</h5></li>
+                  <li><h5>这个平台要支持高并发、高可用，要有任务调度</h5></li>
+                  <li><h5>这个平台要长得好看、要PC/移动端适配</h5></li>
+                </ul>
+            </div>
+          </div>
+        </section>
+        <footer>
+          <div class="">
+            <p class="copyright" id="copyright"><a href="http://www.15166.com/" target="_blank" title="奥飞游戏">ALPHA GAMES</a> &copy; Guangzhou Joygames Information Technology Co. Ltd.. All Rights Reserved.</p>
+          </div>
+        </footer>
+        </div>
+        <script src="{% static '/frame/vendor/prettydoc/js/jquery.min.js' %}"></script> 
+        <script src="{% static '/frame/vendor/prettydoc/js/prettify/prettify.js' %}" type="text/javascript" ></script> 
+        <script src="{% static '/frame/vendor/prettydoc/js/layout.js' %}"></script>
+    </body>
+</html>

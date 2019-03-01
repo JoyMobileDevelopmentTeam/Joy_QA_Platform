@@ -1,0 +1,151 @@
+{% extends 'frame/base.html' %}
+{% load staticfiles %}
+{% block title_block %}
+    环境新建
+{% endblock %}
+{% block mystyle_css %}
+    <style type="text/css">
+    .todo-list > li p {
+    width: 100%;
+    padding: 15px 20px 10px 35px;
+    }
+    </style>
+{% endblock %}
+{% block body_block %}
+<!--编辑时弹出的模态框-->
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="edit_modal" data-backdrop="static">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      {% include 'api/edit_env.html' %}
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" style="z-index: 10000;" id="add_env_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">增加环境</h4>
+            </div>
+            <div class="modal-body col-md-12" >
+                <form class="form-horizontal" id="add_env">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="env_name"
+                               style="font-weight: inherit; font-size: small ">环境名称：</label>
+                        <div class="col-sm-9">
+                            <input name="env_name" type="text" class="form-control" id="env_name"
+                                   placeholder="环境名称" value="">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="base_url"
+                               style="font-weight: inherit; font-size: small ">请求地址：</label>
+                        <div class="col-sm-9">
+                            <input name="base_url" type="text" class="form-control" id="host_port"
+                                   placeholder="127.0.0.1:8000" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="belong_project"
+                               style="font-weight: inherit; font-size: small ">所属项目：</label>
+                        <div class="col-sm-9">
+                            <select name="choose_project_add" class="form-control" id="choose_project_add">
+								<option value="-1">请选择</option>
+							</select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="simple_desc"
+                               style="font-weight: inherit; font-size: small ">简要描述：</label>
+                        <div class="col-sm-9">
+                            <input name="simple_desc" type="text" id="desc" class="form-control"
+                                   placeholder="简要描述" value="">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="submit_modify">提交编辑</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main">
+    <div class="main-content">
+        <div class="container-fluid">
+        		<div class="row">
+	            <div class="col-md-12">
+	                <div class="panel">
+	                    <div class="panel-heading">
+	                        <span class="ion-md-flag" id="title">环境列表</span>
+	                        <a class="ion-md-add btn btn-sm font-white" id="add_env_button"> 新增环境</a>
+	                    </div>
+	                    <hr style="FILTER: alpha(opacity=100,finishopacity=0,style=3);margin-top: 0px;" width="100%" color=#987cb9 SIZE=3>
+	                    <div class="table-responsive" id="config_list_table">
+	                        <table class="table table-hover">
+	                            <thead>
+	                                <tr class="success">
+	                                    <th>
+	                                        <input type="checkbox" id="slect_all" />
+	                                    </th>
+	                                    <th>序号</th>
+	                                    <th>环境名称</th>
+	                                    <th>所属项目</th>
+	                                    <th>请求地址</th>
+	                                    <th>简要描述</th>
+	                                    <th>创建时间</th>
+	                                    <th>操作</th>
+	                                </tr>
+	                            </thead>
+	                            <tbody id="config_list_body">
+	                            </tbody>
+	                        </table>
+	                    </div>
+	                    <nav aria-label="Page navigation" id="page_navigation_wrapper">
+	                        <ul class="pagination">
+	                            <li id="pre_page_wrapper">
+	                                <a aria-label="Previous" id="pre_page" href="#">
+	                                    <span aria-hidden="true">&laquo;</span>
+	                                </a>
+	                            </li>
+	                            <li>
+	                                <a id="page1" style="cursor: pointer;">1</a>
+	                            </li>
+	                            <li>
+	                                <a id="page2" style="cursor: pointer;">2</a>
+	                            </li>
+	                            <li>
+	                                <a id="page3" style="cursor: pointer;">3</a>
+	                            </li>
+	                            <li>
+	                                <a id="page4" style="cursor: pointer;">4</a>
+	                            </li>
+	                            <li>
+	                                <a id="page5" style="cursor: pointer;">5</a>
+	                            </li>
+	                            <li style="display: none;">
+	                                <a id="page_curr">1</a>
+	                            </li>
+	                            <li id="next_page_wrapper">
+	                                <a aria-label="Next" id="next_page" href="#">
+	                                    <span aria-hidden="true">&raquo;</span>
+	                                </a>
+	                            </li>
+	                        </ul>
+	                    </nav>
+	                </div>
+	            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static '/api/js/netutils.js' %}"></script>
+<script src="{% static '/frame/js/pageIndicator.js' %}"></script>
+<script src="{% static '/api/js/environment_manage.js' %}"></script>
+<link rel="stylesheet/less" href="{% static '/api/less/env_manage.less' %}" />
+{% endblock %}

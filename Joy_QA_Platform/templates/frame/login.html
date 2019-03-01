@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" class="fullscreen-bg">
+{% load staticfiles %}
+<head>
+    <title>
+        卓游测试平台 | 登录
+    </title>
+    {% include './base_head.html' %}
+    <!-- Javascript -->
+    {% include './base_js.html' %}
+<style type="text/css">
+#login{
+  width:600px;height: 400px;
+  border-radius: 20px;
+  display: block;
+  margin:0 auto;
+  box-shadow: 0 0 50px #2b333e;
+  background-color: white;opacity: 0.75;
+  animation-duration: 1.5s;
+}
+#login_submit{
+  width: 450px;height: 50px;
+  font-size: 20px;letter-spacing: 2px;
+  background-color: #34416d;color:white;
+  margin: 0 auto;margin-top: 30px;
+  border-radius: 10px;border: 0px;
+  box-shadow: 0 0 15px #34416d;
+}
+.bottom{
+  color: #23232e;font-size: 15px;
+  margin-top: 20px;
+  text-align: right;margin-right:80px;
+}
+#logintitle{
+  text-align: center;line-height: 110px;font-size: 35px;
+  color:white;background-color: #23232e;
+  border-top-right-radius:20px;
+  border-top-left-radius:20px;
+  letter-spacing: 3px;
+  box-shadow: 0 0 10px #2b333e;
+}
+.input-group-addon{
+  color:#2b333e;background-color: white;
+  font-size: 35px;
+  border: 0px;padding-left: 72px;padding-top: 25px;
+}
+.has-error .input-group-addon{
+  color: #2b333e;background-color: white;
+}
+.bottom a{
+  color: #2b333e;
+}
+#account,#password{
+  width: 400px;height: 50px;
+  display: block;
+  margin: 0 auto;margin-top: 15px;padding-top: 13px;
+  color: #2b333e;
+  border:#2b333e;border-bottom: 1px solid #2b333e;
+  font-size: 15px;letter-spacing: 1px;line-height: 40px;
+}
+</style>
+</head>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/animate.css@3.5.2/animate.min.css">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+<body background="http://img.1ppt.com/uploads/allimg/1511/1_151125155414_1.jpg" style="background-size: cover;transform: scale(0.8);">
+
+    <div id="login">
+        <p id="logintitle">卓游测试平台</p>
+                            <form class="form-header" role="form" id="login_form">
+                                <div id="tips" class="loginmsg">
+                                    <div class="input-group {% if login_form.account.errors %} has-error {% endif %}">
+                                        <label for="signin-email" class="control-label sr-only">请输入邮箱账号</label>
+                                        <span class="input-group-addon"><i class="lnr lnr-envelope"></i></span>
+                                        <input type="text" class="form-control" placeholder="请输入企业邮箱" name="account"
+                                               id="account">
+                                    </div>
+                                    <div class="input-group {% if login_form.password.errors %} has-error {% endif %}">
+                                        <label for="signin-password" class="control-label sr-only">请输入密码</label>
+                                        <span class="input-group-addon"><i class="lnr lnr-text-format"></i></span>
+                                        <input type="password" class="form-control" placeholder="请输入密码" name="password"
+                                               id="password">
+                                    </div>
+
+                                    <div id="tips" class="loginmsg">
+                                        <div id="success" class="alert alert-success alert-dismissible" role="alert"
+                                             style="display: none">
+                                            <i class="fa fa-check-circle"></i>
+                                        </div>
+                                        <div id="warning" class="alert alert-warning alert-dismissible" role="alert"
+                                             style="display: none">
+                                            <i class="fa fa-warning">123</i>
+                                            <P>456</P>
+                                        </div>
+                                        <div id="danger" class="alert alert-danger alert-dismissible" role="alert"
+                                             style="display: none">
+                                            <i class="fa fa-times-circle"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group last">
+                                        <input id="login_submit" class="btn btn-primary btn-lg btn-block"
+                                               value="登录" type="button" onkeydown="keyLogin()">
+                                    </div>
+                                    <div class="bottom">
+                                            <span class="helper-text" id="registerbutton"><a
+                                                    href="/frame/register/">没有帐号&nbsp;</a></span>
+                                        <span class="helper-text" id="resetpwdbutton"><a
+                                                href="/frame/reset/">&nbsp;重置密码</a></span>
+                                    </div>
+                                </div>
+                                {% csrf_token %}
+                            </form>
+    </div>
+
+<script src="{% static '/frame/js/login.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var h;
+        var mt;
+        function getHeight(){
+            h = window.innerHeight;
+            mt = (h-500)/2;
+            h = h-mt + 'px';
+            document.getElementById('login').style.marginTop = mt + 'px'
+            $("body").height(h)
+        }
+        setInterval(getHeight,1)
+        $("#login_submit").mouseover(function(){
+            document.getElementById('login_submit').style.backgroundColor = "#856779";
+            document.getElementById('login_submit').style.boxShadow = "0 0 20px #856779";
+        })
+        $("#login_submit").mouseout(function(){
+            document.getElementById('login_submit').style.backgroundColor = "#34416d";
+        })
+        $('#login').addClass('animated bounceInDown');
+        $("#password").keypress(function(e) { 
+          if (e.which == 13) { $("#login_submit").click() } 
+        })
+    })
+</script>
+</body>
+</html>

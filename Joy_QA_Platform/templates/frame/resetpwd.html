@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" class="fullscreen-bg">
+    <head>
+        <title>
+        卓游测试平台 | 重置
+        </title>
+        {% include './base_head.html' %}
+    </style>
+    </head>
+    <body>
+        <!-- WRAPPER -->
+        <div id="wrapper">
+            <div class="vertical-align-wrap">
+                <div class="vertical-align-middle">
+                    <div class="auth-box lockscreen clearfix">
+                            <div class="content">
+                                <div class="header">
+                                    <div class="logo text-center"><h1>重置密码</h1></div>
+                                </div>
+                                <div class="form-auth-small">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="lnr lnr-envelope"></i></span>
+                                            <label for="email" class="control-label sr-only">企业邮箱</label>
+                                            <input type="text" class="form-control" placeholder="企业邮箱" name="email" id="email">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="lnr lnr-text-format"></i></span>
+                                            <label for="newpassword" class="control-label sr-only">新密码</label>
+                                            <input type="password" class="form-control" placeholder="新密码" name="newpassword" id="newpassword">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="lnr lnr-text-format"></i></span>
+                                            <label for="renewpassword" class="control-label sr-only">确认密码</label>
+                                            <input type="password" class="form-control" placeholder="确认密码" name="renewpassword" id="renewpassword">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group" >
+                                            <span class="input-group-addon"><i class="lnr lnr-text-size"></i></span>
+                                            <label for="emailcapture" class="control-label sr-only">邮箱验证码</label>
+                                            <input type="text" class="form-control" placeholder="邮箱验证码" name="emailcapture" id="emailcapture">
+                                            <span  id="getpwdcapture" class="input-group-addon" style="width: 30%; background: #00AAFF; color: white; cursor:pointer;">获取邮箱验证码</span>
+                                        </div>
+                                    </div>
+                                    <div id = "tips" class="resetpwdmsg" style="text-align: center;">
+                                        <div  id="success" class="alert alert-success alert-dismissible" role="alert" style="display: none">
+                                            <i class="fa fa-check-circle"></i>
+                                        </div>
+                                        <div id="warning" class="alert alert-warning alert-dismissible" role="alert" style="display: none">
+                                            <i class="fa fa-warning"></i>
+                                        </div>
+                                        <div id="danger" class="alert alert-danger alert-dismissible" role="alert" style="display: none">
+                                            <i class="fa fa-times-circle"></i>
+                                        </div>
+                                    </div>
+                                    <button id="resetpwdbuttonajax" type="submit" class="btn btn-primary btn-lg btn-block">重置</button>
+                                    <div class="bottom">
+                                        <span class="helper-text" id="loginbutton"><a href="{% url 'frame:login' %}">已有帐号</a></span> 
+                                        <span class="helper-text">  &brvbar; </span> 
+                                        <span class="helper-text" id="registerbutton"><a href="{% url 'frame:register' %}">没有帐号</a></span>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END WRAPPER -->
+        <!-- TOASTR -->
+        <div id="toastr-resetpwd" >
+            <!-- CONTEXTUAL -->
+        </div>
+        <!-- END TOASTR -->
+        
+        <!-- Javascript -->
+        {% include './base_js.html' %}
+    </body>
+</html>

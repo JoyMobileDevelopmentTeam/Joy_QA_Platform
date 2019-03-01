@@ -1,0 +1,88 @@
+{% extends 'frame/base.html' %}
+{% load staticfiles %}
+{% block title_block %}
+	广播消息
+{% endblock %}
+{% block mystyle_css %}
+	<style type="text/css">
+	.todo-list > li p {
+    width: 100%;
+    padding: 15px 0 10px 35px;
+	}
+
+	.fancy-radio {
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 15px;
+    margin-right: 15px;
+	}
+
+	.fancy-radio input[type="radio"] + span {
+    display: inline-block;
+    vertical-align: middle;
+	}
+
+	#receiversgroup{
+	margin-bottom: 15px;	
+	}
+	</style>
+{% endblock %}
+{% block body_block %}
+<div class="main">
+	<!-- MAIN CONTENT -->
+	<div class="main-content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-8">
+					<div class="panel">
+						<div class="panel-heading" style="padding-bottom: 0;">
+							<div class="right">
+								<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
+							</div>
+							<div class="custom-tabs-line tabs-line-bottom left-aligned">
+								<ul class="nav" role="tablist">
+									<li class="active"><a href="#tab-bottom-left1" role="tab" data-toggle="tab">广播</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="tab-content">
+							<div id="tab-bottom-left1" style="padding-top: 0;">
+								<div class="panel-body">
+									<input type="text" class="form-control" placeholder="主题" name="messagestitle" id="messagestitle"><br>                                                                         
+                                    <select class="form-control" id="receiversgroup" name="receiversgroup" required="true">
+                                        <option value="" disabled selected>&minus;&minus;&minus;广播对象&minus;&minus;&minus;</option>
+                                        {% for department in departments_all %} 
+                                            <option value="{{department.id}}">{{department.name}}</option>
+                                        {% endfor %}
+                                        <option value="9999">卓游测试平台所有用户</option>
+                                    </select>                                                  
+                                    <label class="fancy-radio">
+										<input name="priority" id="info" type="radio" value="3">
+										<span><i></i>信息</span>
+									</label>
+                                    <label class="fancy-radio">
+										<input name="priority" id="warning" type="radio" value="2">
+										<span><i></i>提醒</span>
+									</label>
+									<label class="fancy-radio">
+										<input name="priority" id="danger" type="radio" value="1">
+										<span><i></i>警告</span>
+									</label>
+									<textarea class="form-control" placeholder="内容" rows="4" name="messagestext" id="messagestext"></textarea><br>
+								</div>
+								<div class="panel-footer" style="border: 0;">
+									<div class="text-center">
+										<div class="btn btn-default" id="sendallmessagesajax" >发送</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END MAIN CONTENT -->
+{% endblock %}
+

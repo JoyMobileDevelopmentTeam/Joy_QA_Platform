@@ -1,0 +1,321 @@
+{% extends 'frame/base.html' %} {% load staticfiles %} {% block title_block %} 用例新建 {% endblock %} {% block mystyle_css %}
+<style type="text/css">
+	.todo-list>li p {
+		width: 100%;
+		padding: 15px 20px 10px 35px;
+	}
+</style>
+{% endblock %} {% block body_block %}
+<div class="main">
+	<!-- MAIN CONTENT -->
+	<div class="main-content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel">
+						<div class="panel-heading">
+							<span class="ion-md-flag" id="title">用例新建</span>
+						</div>
+						<hr style="FILTER: alpha(opacity=100,finishopacity=0,style=3);margin-top: 0px;" width="100%" color=#987cb9 SIZE=3>
+
+						<div class="custom-tabs-line tabs-line-bottom left-aligned">
+							<ul class="nav" role="tablist">
+								<li class="active">
+									<a href="#tab-bottom-left1" role="tab" data-toggle="tab">用例信息</a>
+								</li>
+								<li>
+									<a href="#tab-bottom-left2" role="tab" data-toggle="tab">变量/参数/hooks</a>
+								</li>
+								<li>
+									<a href="#tab-bottom-left3" role="tab" data-toggle="tab">request</a>
+								</li>
+								<li>
+									<a href="#tab-bottom-left4" role="tab" data-toggle="tab">extract/validate</a>
+								</li>
+							</ul>
+						</div>
+						<br>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="tab-bottom-left1" style="padding-left: 8px;">
+								<br>
+								<form class="form-horizontal" id="form_message">
+									<div class="form-group  has-feedback">
+										<label class="control-label col-md-2 text-primary" for="case_name">用例名称：</label>
+										<div class="col-md-5">
+											<input type="text" class="form-control" id="case_name" aria-describedby="inputSuccess3Status" name="case_name" placeholder="请输入用例名称" value="">
+											<span class="glyphicon glyphicon-th-large form-control-feedback" aria-hidden="true"></span>
+										</div>
+									</div>
+
+									<div class="form-group  has-feedback">
+										<label class="control-label col-md-2 text-primary" for="project_name">所属项目：</label>
+										<div class="col-md-5">
+											<select type='select' id='project_name' name="project_id" class="form-control">
+												<option value="-1">请选择</option>
+												{% for project in projects %}
+												<option value="{{ project.project_id }}">{{ project.project_name }}</option>
+												{% endfor %}
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group  has-feedback">
+										<label class="control-label col-md-2 text-primary" for="module_name">所属模块：</label>
+										<div class="col-md-5">
+											<select type='select' id='module_name' name="module_id" class="form-control">
+												<option value="-1">请选择</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group  has-feedback">
+										<label class="control-label col-md-2 text-primary" for="config_name">引用配置：</label>
+										<div class="col-md-5">
+											<select type='select' id='config_name' name="config_id" class="form-control" onchange="auto_load('#form_message', '/api/add_case/', '#belong_module_id', 'config')
+                                                auto_load('#form_message', '/api/add_case/', '#config', 'config')">
+												<option value="-1">请选择</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group  has-feedback">
+										<!-- 根据选择的项目和模块动态加载用例 可以跨项目添加依赖用例，选中会自动添加到依赖用例列表里，依赖用例执行顺序鼠标悬浮会自动展开，支持删除、顺序拖拽 鼠标悬浮到前置条件会自动收缩 如果是单节课就选择单接口用例 无需依赖-->
+										<label class="control-label col-md-2 text-primary" for="case_select">依赖用例：</label>
+										<div class="col-md-5">
+											<select type='select' id='case_select' name="case_id" class="form-control" style="max-height: 200px;overflow: auto;">
+												<option value="-1">请选择</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group  has-feedback">
+										<label class="control-label col-md-2 text-primary" for="dev_name">依赖执行顺序：</label>
+										<div class="col-md-5">
+
+											<nav>
+												<ul id="sortable" class="am-nav">
+												</ul>
+											</nav>
+											<span class="glyphicon glyphicon-th-large form-control-feedback" aria-hidden="true"></span>
+										</div>
+									</div>
+
+									<div class="form-group  has-feedback">
+										<label class="control-label col-md-2 text-primary" for="dev_name">开发人员：</label>
+										<div class="col-md-5">
+											<input type="text" class="form-control" id="dev_name" aria-describedby="inputSuccess3Status" name="dev_name" placeholder="请输入技术人员名称" value="{{request.user.username}}">
+											<span class="glyphicon glyphicon-th-large form-control-feedback" aria-hidden="true"></span>
+										</div>
+									</div>
+									<div class="form-group  has-feedback">
+										<label class="control-label col-md-2 text-primary" for="case_file">csv文件：</label>
+										<div class="col-md-4">
+											<input id="case_file" type="file" class="filestyle col-md-5" data-buttonName="btn-primary" />
+										</div>
+										<button type="button" class="btn btn-info col-md-1" id="upload_case">使用文件</button>
+									</div>
+								</form>
+							</div>
+
+							<div class="tab-pane fade" id="tab-bottom-left2" style="padding-left: 8px;">
+								<br>
+								<button class="btn btn-info" value="添 加" onclick="add_row('variables')">+ variables</button>
+								<button class="btn btn-danger" value="删 除" onclick="del_row('variables')">- variables</button>
+								<button class="btn btn-info" value="添 加" onclick="add_params('params')">+ param</button>
+								<button class="btn btn-danger" value="删 除" onclick="del_row('params')">- param</button>
+								<button class="btn btn-info" value="添 加" onclick="add_row('hooks')">+ hooks</button>
+								<button class="btn btn-danger" value="删 除" onclick="del_row('hooks')">- hooks</button>
+
+								<form id="form_variables">
+									<table class="table table-hover table-condensed table-bordered table-striped" id="variables">
+										<caption>Variables:</caption>
+										<thead>
+											<tr class="active text-success">
+												<th width="5%" align="center">操作</th>
+												<th width="30%" align="center">Key</th>
+												<th width="10%" align="center">Type</th>
+												<th width="55%" align="center">Value</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</form>
+
+								<form id="form_params">
+									<table class="table table-hover table-condensed table-bordered table-striped" id="params">
+										<caption>parameters:</caption>
+										<thead>
+											<tr class="active text-success">
+												<th width="5%" align="center">操作</th>
+												<th width="20%" align="center">Key</th>
+												<th width="75%" align="center">Value</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</form>
+
+								<form id="form_hooks">
+									<table class="table table-hover table-condensed table-bordered table-striped" id="hooks">
+										<caption>hooks:</caption>
+										<thead>
+											<tr class="active text-success">
+												<th width="5%" align="center">操作</th>
+												<th width="47.5%" align="center">setup_hooks</th>
+												<th width="47.5%" align="center">teardown_hooks</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</form>
+							</div>
+
+							<div class="tab-pane fade" id="tab-bottom-left3" style="padding-left: 8px;">
+								<br>
+								<div class="form-inline">
+									<div class="form-group">
+										<div class="input-group">
+											<div class="input-group-addon">URL</div>
+											<input type="text" class="form-control" id="url" name="url" placeholder="url">
+										</div>
+									</div>
+
+									<div class="form-group ">
+										<div class="input-group">
+											<div class="input-group-addon">Method</div>
+											<select class="form-control" name="method" id="method">
+												<option value="POST">POST</option>
+												<option value="GET">GET</option>
+												<option value="PUT">PUT</option>
+												<option value="DELETE">DELETE</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group ">
+										<div class="input-group">
+											<div class="input-group-addon">Type</div>
+											<select class="form-control" name="DataType" id="DataType">
+												<option value="data">data</option>
+												<option value="json">json</option>
+											</select>
+										</div>
+									</div>
+
+									<button class="btn btn-info" value="添 加" id="add_data" onclick="add_row('data')">+ data
+                                        </button>
+									<button class="btn btn-danger" value="删 除" id="del_data" onclick="del_row('data')">- data
+                                        </button>
+									<button class="btn btn-info" value="添 加" onclick="add_row('header')">+ headers</button>
+									<button class="btn btn-danger" value="删 除" onclick="del_row('header')">- headers</button>
+
+									<form id="form_request_data">
+										<table class="table table-hover table-condensed table-bordered table-striped" id="data">
+											<caption>data:</caption>
+											<thead>
+												<tr class="active text-success">
+													<th width="5%" align="center">操作</th>
+													<th width="30%" align="center">Key</th>
+													<th width="5%" align="center">Type</th>
+													<th width="40%" align="center">Value</th>
+													<th width="10%" align="center">是否参与签名</th>
+													<th width="10%" align="center" style="padding-left: 5px;">基础测试</th>
+												</tr>
+											</thead>
+											<tbody>
+											</tbody>
+										</table>
+									</form>
+
+									<div class="col-md-8" id="json_text" style="display: none;">
+										<textarea class="col-md-8" name="json_text" id="json_input" rows="10" cols="1">{"key":"value"}</textarea>
+									</div>
+
+									<form id="form_request_headers">
+										<table class="table table-hover table-condensed table-bordered table-striped" id="header">
+											<caption>headers:</caption>
+											<thead>
+												<tr class="active text-success">
+													<th width="5%" align="center">操作</th>
+													<th width="40%" align="center">Key</th>
+													<th width="55%" align="center">Value</th>
+												</tr>
+											</thead>
+											<tbody>
+											</tbody>
+										</table>
+									</form>
+								</div>
+							</div>
+
+							<div class="tab-pane fade" id="tab-bottom-left4" style="padding-left: 8px;">
+								<br>
+								<button class="btn btn-info" value="添 加" onclick="add_row('extract')">+ extract
+                                    </button>
+								<button class="btn btn-danger" value="删 除" onclick="del_row('extract')">- extract
+                                    </button>
+								<button class="btn btn-info" value="添 加" onclick="add_row('validate')">+ validate</button>
+								<button class="btn btn-danger" value="删 除" onclick="del_row('validate')">- validate</button>
+								<form id="form_extract">
+									<table class="table table-hover table-condensed table-bordered table-striped" id="extract">
+										<caption>extract:</caption>
+										<thead>
+											<tr class="active text-success">
+												<th width="5%" align="center">操作</th>
+												<th width="30%" align="center">Key</th>
+												<th width="55%" align="center">Value</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</form>
+
+								<form id="form_validate">
+									<table class="table table-hover table-condensed table-bordered table-striped" id="validate">
+										<caption>validate:</caption>
+										<thead>
+											<tr class="active text-success">
+												<th width="5%" align="center">操作</th>
+												<th width="32%" align="center">Check</th>
+												<th width="10%" align="center">Comparator</th>
+												<th width="8%" align="center">Type</th>
+												<th width="45%" align="center">Expected</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</form>
+							</div>
+							</form>
+						</div>
+						<div class="am-form-group am-cf">
+							<div class="you" style="margin-left: 8%;">
+								<button type="button" class="btn btn-success btn-sm" id="send">点 击 提 交
+                    				</button> &nbsp; » &nbsp;
+								<a type="submit" class="btn btn-info btn-sm" id="add_case">新 增 模 块
+								</a>
+							</div>
+							</br>
+							</br>
+							</br>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{% static '/api/js/netutils.js' %}"></script>
+<script src="{% static '/api/js/commons.js' %}"></script>
+<script src="{% static '/frame/vendor/bootstrap/js/bootstrap-filestyle.min.js' %}"></script>
+<script src="{% static '/api/js/case_add.js' %}"></script>
+<link rel="stylesheet/less" href="{% static '/api/less/case_add.less' %}" />
+
+<!-- END MAIN CONTENT -->
+{% endblock %}

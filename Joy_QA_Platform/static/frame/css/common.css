@@ -1,0 +1,51 @@
+table#variables tr td, table#data tr td, table#header tr td, table#validate tr td,
+table#extract tr td, table#hooks tr td, table#params tr td {
+    padding: 0px;
+}
+
+.tips {
+
+    color: rgba(0, 0, 0, 0.5);
+
+    padding-left: 10px;
+
+}
+
+.tips_true, .tips_false {
+
+    padding-left: 10px;
+
+}
+
+.tips_true {
+
+    color: green;
+
+}
+
+.tips_false {
+
+    color: red;
+
+}
+
+#pre_case li {
+    position: relative;
+}
+
+#pre_case i {
+    -webkit-transition: opacity .2s;
+    transition: opacity .2s;
+    opacity: 0;
+    display: block;
+    cursor: pointer;
+    color: #c00;
+    top: 10px;
+    right: 40px;
+    position: absolute;
+    font-style: normal;
+}
+
+#pre_case li:hover i {
+    opacity: 1;
+}

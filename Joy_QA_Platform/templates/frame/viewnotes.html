@@ -1,0 +1,49 @@
+{% extends 'frame/base.html' %}
+{% load staticfiles %}
+{% block title_block %}
+	便利贴看板
+{% endblock %}
+{% block body_block %}
+<div class="main">
+	<!-- MAIN CONTENT -->
+	<div class="main-content">
+		<div class="container-fluid">
+		{% get_user_notes session_user_object.id as user_notes_list %}
+		{% for note in user_notes_list %}
+			{% newline forloop.counter0 as newtrue %}
+			{% if newtrue %} 
+				<div class="row">		
+			{% endif %}
+					<div class="col-md-4">
+						<div class="panel">
+							<div class="panel-headline">
+								<div class="panel-heading">
+									<h3 class="panel-title">{{note.title|slice:"18"}}</h3>
+									<p class="panel-subtitle">{{note.subtitle|slice:"25"}}</p>
+									<div class="right">
+										<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
+										<button type="button" class="btn-remove"><i class="lnr lnr-cross"></i></button>
+									</div>
+								</div>
+							</div>
+							<div class="panel-body">
+								<p>{{note.text}}</p>
+							</div>
+							<div class="panel-footer">
+								<h5 style="display:inline-block; padding-left: 0px; ">更新：{{note.modify_time|date:"m-d H:i:s"}}</h5>
+								<h5 style="display:inline-block; margin-right: 5px; cursor:pointer;float: right;"  class="topnotesajax" name="{{note.id}}"><i class="lnr lnr-arrow-up"></i>顶</h5>
+								<h5 style="display:inline-block; margin-right: 5px; cursor:pointer;float: right;"  class="deletenotesajax" name="{{note.id}}"><i class="lnr lnr-trash"></i>删</h5>	
+							</div>
+						</div>
+					</div>	
+			{% if newtrue %}   
+				</div>		
+			{% endif %}					
+		{% endfor %}
+
+		</div>
+	</div>
+	</div>
+</div>
+<!-- END MAIN CONTENT -->
+{% endblock %}

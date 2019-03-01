@@ -1,0 +1,45 @@
+{% extends 'frame/base.html' %}
+{% load staticfiles %}
+{% block title_block %}
+	创建便利贴
+{% endblock %}
+{% block mystyle_css %}
+	<style type="text/css">
+	.page-title{
+    	padding-top: 20px;
+    	padding-left: 10px;
+	}
+	</style>
+{% endblock %}
+{% block body_block %}
+<div class="main">
+	<!-- MAIN CONTENT -->
+	<div class="main-content">
+		<div class="container-fluid">
+			<div class="col-md-8">
+			<div class="panel">
+			<div class="container-fluid">
+			<h1 class="page-title">创建便利贴</h1>
+			<div class="row ">
+				<div class="panel-body">
+					<input type="text" class="form-control" placeholder="主标题" name="title" id="title">
+					<br>
+					<input type="text" class="form-control" placeholder="副标题" name="subtitle" id="subtitle">
+					<br>
+					<textarea class="form-control" placeholder="内容" rows="4" name="text" id="text"></textarea>
+					<br>
+				</div>
+				<div class="panel-footer">
+						<div class="text-center">
+							<div class="btn btn-default" id="createnotesajax" >创建</div>
+						</div>
+				</div>
+			</div>
+			</div>
+			</div>
+			</div>
+		</div>
+	</div>
+<!-- END MAIN CONTENT -->
+</div>
+{% endblock %}

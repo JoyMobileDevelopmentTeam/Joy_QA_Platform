@@ -1,0 +1,114 @@
+{% extends 'frame/base.html' %} {% load staticfiles %} {% block title_block %} 报告列表 {% endblock %} {% block mystyle_css %}
+<style type="text/css">
+	.todo-list>li p {
+		width: 100%;
+		padding: 15px 0 10px 35px;
+	}
+</style>
+{% endblock %} {% block body_block %}
+<div class="main">
+	<!-- MAIN CONTENT -->
+	<div class="main-content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel">
+						<div class="panel-heading">
+							<span class="ion-md-flag" id="title">报告列表</span>
+						</div>
+						<hr style="FILTER: alpha(opacity=100,finishopacity=0,style=3);margin-top: 0px;" width="100%" color=#987cb9 SIZE=3>
+						<div id="search-bar" class="row">
+								<div class="col-md-1 input">
+										<select id="search_type" name="search_type" class="form-control">
+											<option value="0" selected>所有报告</option>
+											<option value="1">定时任务报告</option>
+										</select>
+									</div>
+							<div class="col-md-1 input">
+								<select id="search_project" name="search_project" class="form-control">
+									<option value="-1" selected>项目名称</option>
+								</select>
+							</div>
+							<div class="col-md-1 input">
+								<select id="search_name_module" name="search_name_module" class="form-control">
+									<option value="-1" selected>模块名称</option>
+								</select>
+							</div>
+							<div class="col-sm-2 col-md-1 col-lg-1 input">
+								<input type="text" class="form-control" id="search_name" placeholder="报告名称">
+							</div>
+							<div class="col-md-2 input">
+								<div class="form-group daterange">
+									<input id="date-content" class="form-control" name="range_date" type="text" style="min-width: 60px;" readonly="true">
+								</div>
+							</div>
+							<a href="#" class="btn btn-sm btn-success search" id="search_btn">搜索</a>
+							<a href="#" class="btn btn-sm btn-info clear" id="clear_btn">清空条件</a>
+							<a href="#" class="btn btn-sm btn-danger delete" id="delete_btn">删除</a>
+						</div>
+						<div class="table-responsive" id="project_list_table">
+							<table class="table table-hover">
+								<thead>
+									<tr class="success">
+										<th>
+											<input type="checkbox" id="slect_all" />
+										</th>
+										<th>序号</th>
+										<th>报告名称</th>
+										<th>测试人员</th>
+										<th>测试时间</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody id="report_list_body">
+								</tbody>
+							</table>
+						</div>
+						<nav aria-label="Page navigation" id="page_navigation_wrapper">
+							<ul class="pagination">
+								<li id="pre_page_wrapper">
+									<a aria-label="Previous" id="pre_page" href="#">
+										<span aria-hidden="true">&laquo;</span>
+									</a>
+								</li>
+								<li>
+									<a id="page1" style="cursor: pointer;">1</a>
+								</li>
+								<li>
+									<a id="page2" style="cursor: pointer;">2</a>
+								</li>
+								<li>
+									<a id="page3" style="cursor: pointer;">3</a>
+								</li>
+								<li>
+									<a id="page4" style="cursor: pointer;">4</a>
+								</li>
+								<li>
+									<a id="page5" style="cursor: pointer;">5</a>
+								</li>
+								<li style="display: none;">
+									<a id="page_curr">1</a>
+								</li>
+								<li id="next_page_wrapper">
+									<a aria-label="Next" id="next_page" href="#">
+										<span aria-hidden="true">&raquo;</span>
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="{% static '/frame/js/pageIndicator.js' %}"></script>
+<script src="{% static '/api/js/netutils.js' %}"></script>
+<script src="{% static '/api/js/moment.min.js' %}"></script>
+<script src="{% static '/api/js/commons.js' %}"></script>
+<script src="{% static '/api/js/daterangepicker.js' %}"></script>
+<script src="{% static '/api/js/report_list.js' %}"></script>
+<link rel="stylesheet/less" href="{% static '/api/css/daterangepicker.css' %}" />
+<link rel="stylesheet/less" href="{% static '/api/less/report_list.less' %}" />
+<!-- END MAIN CONTENT -->
+{% endblock %}

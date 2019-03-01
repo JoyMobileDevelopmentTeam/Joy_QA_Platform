@@ -1,0 +1,178 @@
+{% extends 'frame/base.html' %}
+{% load staticfiles %}
+{% block title_block %}
+	用例管理
+{% endblock %}
+{% block mystyle_css %}
+	<style type="text/css">
+      th, td { white-space: nowrap; }
+      div.dataTables_wrapper {
+        margin: 0 auto;
+      }
+
+      select {
+      	background: white;
+      }
+      
+	</style>
+{% endblock %}
+{% block body_block %}
+<div class="main">
+	<!-- MAIN CONTENT -->
+	<div class="main-content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-11">
+					<div class="panel">
+						<div class="panel-heading">
+							<div class="right">
+								<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
+								<button type="button" class="btn-remove"><i class="lnr lnr-cross"></i></button>
+							</div>
+						</div>
+						<div class="panel-body no-padding">
+							<table class="table table-hover" id="table_id_testcases">
+								<thead>
+								    <tr>
+								        <th>ID</th>
+								        <th>用例名</th>
+								        <th>项目</th>
+								        <th>测试集</th>
+								        <th>URL</th>
+								        <th>METHOD</th>		        
+								        <th>期望</th>
+								        <th>执行时间</th>
+								        <th>执行标签</th>
+								        <th>执行结果</th>
+								    </tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+						<div class="panel-footer">
+							<h5 style="display:inline-block; margin-right: 5px; cursor:pointer;"  class="clonetestcaseajax" name="clonetestcase" id="clonetestcase"><i class="lnr lnr-file-add"></i>克隆</h5>
+							<h5 style="display:inline-block; margin-right: 5px; cursor:pointer;"  class="testcaseexecajax" name="testcaseexec"><i class="lnr lnr-rocket"></i>执行</h5>
+							<h5 style="display:inline-block; margin-right: 5px; float: right;"><i class="lnr lnr-pencil"></i><a style="color:#676a6d" href="{% url 'apiauto:testcasecreate' %}" target="_Blank">新建</a></h5>
+							<h5 style="display:inline-block; margin-right: 5px; cursor:pointer;float: right;"  class="deletetestcaseajax" name="deletetestcase"><i class="lnr lnr-trash"></i>删除</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END MAIN CONTENT -->
+</div>
+{% endblock %}
+{% block script %}
+	<script>
+	    <!--第三步：初始化Datatables-->
+	    $(document).ready(function () {
+	       	var table =  $('#table_id_testcases').DataTable({
+	        	select: true,
+	        	scrollY: false,
+	        	scrollX: true,
+	        	autoWidth: true,
+	        	stateSave :true,
+	        	order: [[ 0, 'desc' ]],
+
+			    language: {
+			        "sProcessing": "处理中...",
+			        "sLengthMenu": "显示 _MENU_ 条",
+			        "sZeroRecords": "没有匹配记录",
+			        "sInfo": "显示第 _START_ 至 _END_ 条记录，共 _TOTAL_ 条",
+			        "sInfoEmpty": "显示第 0 至 0 条记录，共 0 条",
+			        "sInfoFiltered": "(由 _MAX_ 条记录过滤)",
+			        "sInfoPostFix": "",
+			        "sSearch": "搜索:",
+			        "sUrl": "",
+			        "sEmptyTable": "表中数据为空",
+			        "sLoadingRecords": "载入中...",
+			        "sInfoThousands": ",",
+			        "oPaginate": {
+			            "sFirst": "首页",
+			            "sPrevious": "&lt;",
+			            "sNext": "&gt;",
+			            "sLast": "末页"
+			        },
+			        "oAria": {
+			            "sSortAscending": ": 以升序排列此列",
+			            "sSortDescending": ": 以降序排列此列"
+			        }
+			    },
+			    serviceSize:true,
+
+	            ajax:{              
+	                type:'POST',
+	                url:'/apiauto/testcasesjson/'
+	            },
+                columns: [
+                    { data: 'id' },
+                    { data: 'testcase_name' },
+                    { data: 'project' },
+                    { data: 'testsuite' },
+                    { data: 'url_whole' },
+                    { data: 'method' },                   
+                    { data: 'expectcode' },
+                    { data: 'result_time' },
+                    { data: 'tag' },
+                    { data: 'result' },
+                ],	
+                columnDefs: [   
+		            {
+		                targets: 0,
+		                render: function (data, type, row, meta) {
+		                	var targethref = '/apiauto/testcasedetails/' + row.id
+		                   	return "<a href='"+targethref+"' target='_blank'>" + row.id + "</a>";
+		                }
+		            },
+		            {
+		                targets: 2,
+		                render: function (data, type, row, meta) {
+		                	var targethref = '/apiauto/project/'
+		                   	return "<a href='"+targethref+"' target='_blank'>" + row.project + "</a>";
+		                }
+		            },
+		            {
+		                targets: 3,
+		                render: function (data, type, row, meta) {
+		                	var targethref = '/apiauto/testsuites/'
+		                   	return "<a href='"+targethref+"' target='_blank'>" + row.testsuite + "</a>";
+		                }
+		            },	            
+		            {
+		                targets: 9,
+		                render: function (data, type, row, meta) {
+		                	var titlemsg = row.reason
+
+		                	if(row.result == 1){
+		                		var returnstr = "<span class='label label-success' title=" + titlemsg +">SUCCESS</span>"
+		                	}
+
+		                	if(row.result == 2){
+		                		var returnstr = "<span class='label label-warning' title=" + titlemsg +">FAIL</span>"
+		                	}		                	
+
+		                	if(row.result == 3){
+		                		var returnstr = "<span class='label label-danger' title=" + titlemsg +">ERROR</span>"
+		                	}
+
+		                	if(row.result == 4||row.result == ''){
+		                		var returnstr = "<span class='label label-info' title=" + titlemsg +">INIT</span>"
+		                	}
+
+		                   	return returnstr;
+		                }
+		            },			            		            
+                ],      			    
+	        });
+	        
+	        $('#table_id_testcases tbody').on( 'click', 'tr', function () {
+		        $(this).toggleClass('selected');
+		    } );
+
+	    });
+	</script>
+
+{% endblock %}

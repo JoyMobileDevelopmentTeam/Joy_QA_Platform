@@ -1,0 +1,26 @@
+{% extends 'frame/base.html' %}
+{% load staticfiles %}
+{% block title_block %}
+	在线用户
+{% endblock %}
+{% block body_block %}
+<div class="main">
+	<!-- MAIN CONTENT -->
+	<div class="main-content">
+		  <ul>
+		    {% for user in online_users %}
+		      <!-- NOTE: We escape HTML to prevent XSS attacks. -->
+		      <li data-username="{{ user.username|escape }}">
+		        {{ user.username|escape }}: {{ user.online }}
+		      </li>
+		    {% endfor %}
+		  </ul>
+	</div>
+</div>
+<!-- END MAIN CONTENT -->
+</div>
+{% endblock %}
+
+
+
+

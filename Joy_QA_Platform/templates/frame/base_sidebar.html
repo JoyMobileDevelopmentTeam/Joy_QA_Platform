@@ -1,0 +1,127 @@
+{% load staticfiles %}
+<!-- LEFT SIDEBAR -->
+<div id="sidebar-nav" class="sidebar" style="overflow: auto;">
+	<div class="sidebar-scroll">
+		<nav>
+			<ul class="nav">
+				
+				<li><a href="/api/index/" class=""><i class="lnr lnr-home"></i> <span>首页</span></a></li>
+
+				<li>
+					<a href="#subPages_project" class="collapsed"><i class="lnr lnr-dice"></i> <span>项目管理</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="subPages_project" class="collapse ">
+						<ul class="nav">
+							<li><a href="/api/project_create/" class="">项目新增</a></li>
+							<li><a href="/api/project_list/" class="">项目列表</a></li>
+							<li><a href="/api/debugtalk_list/" class="">驱动列表</a></li>
+						</ul>
+					</div>
+				</li>
+
+				<li>
+					<a href="#subPages_module" class="collapsed"><i class="fa fa-id-card-o"></i> <span>模块管理</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="subPages_module" class="collapse ">
+						<ul class="nav">
+							<li><a href="/api/module_create/" class="">模块新增</a></li>
+							<li><a href="/api/module_list/" class="">模块列表</a></li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<a href="#subPages_case" class="collapsed"><i class="lnr lnr-sun"></i> <span>用例管理</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="subPages_case" class="collapse ">
+						<ul class="nav">
+							<li><a href="/api/case_create/" class="">用例新增</a></li>
+							<li><a href="/api/case_list/" class="">用例列表</a></li>
+						</ul>
+					</div>
+				</li>
+				<li style="display: none;">
+					<a href="#subPages_config"  class="collapsed"><i class="lnr lnr-file-empty"></i> <span>配置管理</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="subPages_config" class="collapse ">
+						<ul class="nav">
+							<li><a href="/api/config_new" class="">配置新增</a></li>
+							<li><a href="/api/config_list" class="">配置列表</a></li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<a href="#subPages_report"  class="collapsed"><i class="lnr lnr-book"></i> <span>报告管理</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="subPages_report" class="collapse ">
+						<ul class="nav">
+							<li><a href="/api/report_list" class="">查看报告</a></li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<a href="#subPages_env"   class="collapsed"><i class="lnr lnr-leaf"></i> <span>环境管理</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="subPages_env" class="collapse ">
+						<ul class="nav">
+							<li><a href="/api/env_list" class="">运行环境</a></li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<a href="#subPages_task"   class="collapsed"><i class="lnr lnr-bubble"></i> <span>任务管理</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="subPages_task" class="collapse ">
+						<ul class="nav">
+							<li><a href="/api/task_create/" class="">任务新增</a></li>
+							<li><a href="/api/task_list/" class="">任务列表</a></li>
+							<li><a href="/api/task_monitor" class="">任务监控</a></li>
+						</ul>
+					</div>
+				</li>
+                {% if request.user.is_superuser %}
+				<li>
+					<a href="#subPages_sys"   class="collapsed"><i class="lnr lnr-cog"></i> <span>系统管理</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="subPages_sys" class="collapse ">
+						<ul class="nav">
+							<li><a href="/api/auth" class="">权限管理</a></li>
+						</ul>
+					</div>
+				</li>
+                {% endif %}
+			</ul>
+		</nav>
+	</div>
+</div>
+
+<script>		
+	$("#sidebar-nav .nav li").hover(function(){
+		var $li = $(this)
+		$li.find("a").attr("aria-expanded","true")
+		$li.find(".icon-submenu").addClass("deg90")
+		$li.find("a").attr("class","")
+		$li.children('div').attr("aria-expanded","true")
+		$li.children('div').attr("class","collapse in")	
+	},function(){
+		var $li = $(this)
+		$li.find("a").attr("aria-expanded","false")
+		$li.find(".icon-submenu").removeClass("deg90")
+		
+		$li.find("a").attr("class","collapse")
+		$li.children('div').attr("aria-expanded","false")
+		$li.children('div').attr("class","collapse")
+	})
+	
+	
+</script>
+<style>
+	.sidebar .nav > li > a:focus, .sidebar .nav > li > a.active{
+		background: none;
+		border-left: 5px solid transparent;
+		margin: 0px;
+	}
+	.sidebar .nav .icon-submenu {
+		float: right;
+		vertical-align: middle;
+		margin-top:9px;
+		line-height: 1.1;
+		font-size: 12px;
+		transition: .2s;
+	}
+	.sidebar .nav .icon-submenu.deg90{
+		transform: rotate(-90deg);
+	}
+</style>
+<!-- END LEFT SIDEBAR -->

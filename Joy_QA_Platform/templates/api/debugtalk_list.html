@@ -1,0 +1,87 @@
+{% extends 'frame/base.html' %} 
+{% load staticfiles %} 
+{% block title_block %} 用例列表 {% endblock %} 
+{% block mystyle_css %}
+<style type="text/css">
+    .todo-list>li p {
+        width: 100%;
+        padding: 15px 0 10px 35px;
+    }
+</style>
+{% endblock %} {% block body_block %}
+
+<div class="main">
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">驱动列表</h4>
+            </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel">
+                        <hr style="FILTER: alpha(opacity=100,finishopacity=0,style=3);margin-top: 0px;" width="100%" color=#987cb9 SIZE=3>
+                        <div class="table-responsive" id="case_list_table">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr class="success">
+                                        <th>
+                                            <input type="checkbox" id="slect_all" />
+                                        </th>
+                                        <th>序号</th>
+                                        <th>项目</th>
+                                        <th>驱动文件</th>
+                                        <th>创建时间</th>
+                                        <th>更新时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="debugtalk_list_body">
+                                </tbody>
+                            </table>
+                        </div>
+                        <nav aria-label="Page navigation" id="page_navigation_wrapper" style="text-align: center;">
+                            <ul class="pagination">
+                                <li id="pre_page_wrapper">
+                                    <a aria-label="Previous" id="pre_page" href="#">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="page1" style="cursor: pointer;">1</a>
+                                </li>
+                                <li>
+                                    <a id="page2" style="cursor: pointer;">2</a>
+                                </li>
+                                <li>
+                                    <a id="page3" style="cursor: pointer;">3</a>
+                                </li>
+                                <li>
+                                    <a id="page4" style="cursor: pointer;">4</a>
+                                </li>
+                                <li>
+                                    <a id="page5" style="cursor: pointer;">5</a>
+                                </li>
+                                <li style="display: none;">
+                                    <a id="page_curr">1</a>
+                                </li>
+                                <li id="next_page_wrapper">
+                                    <a aria-label="Next" id="next_page" href="#">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static '/frame/js/pageIndicator.js' %}"></script>
+<script src="{% static '/api/js/netutils.js' %}"></script>
+<script src="{% static '/api/js/commons.js' %}"></script>
+<script src="{% static '/api/js/debugtalk_list.js' %}"></script>
+<!-- END MAIN CONTENT -->
+{% endblock %}

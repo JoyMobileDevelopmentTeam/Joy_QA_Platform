@@ -1,0 +1,60 @@
+{% extends 'frame/base.html' %} {% load staticfiles %} {% block title_block %} 首页 {% endblock %} {% block body_block %}
+<div class="main">
+	<div class="main-content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel" style="height: 700px;">
+						<div class="fbneirong">
+							<div class="row" style="padding-left: 10px;">
+								<div class="col-md-6" id="chart_container" style="width: 50%;height:300px;float: left;">
+									<div class="row">
+										<!--<div class="col-md-12"id="charts_count" style="height:300px;float: left;background-color: white;"></div>-->
+										<div class="col-md-12" id="charts_task_to_project" style="height:300px;float: left;background-color: white;"></div>
+									</div>
+									<div class="row">
+										<div class="col-md-12" id="charts_task_fail" style="height:300px;float: left;background-color: white;"></div>
+										<!--<div class="col-md-6" id="other_chart" style="height:300px;float: left;background-color: yellowgreen;"></div>
+										<div class="col-md-6" id="other_chart1" style="height:300px;float: left;background-color: deepskyblue;"></div>-->
+									</div>
+									<div class="row">
+										<div class="col-md-4">
+											<div class="form-group daterange">
+												<input id="date-content" class="form-control" name="range_date" type="text" style="min-width: 60px;" readonly="true">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-5" id="fail_task_list">
+									<div class="table-responsive" id="fail_task_container">
+										<table class="table table-hover">
+											<thead>
+												<tr class="success">
+													<th>序号</th>
+													<th>所属项目</th>
+													<th>任务名称</th>
+													<th>失败时间</th>
+													<th>操作</th>
+												</tr>
+											</thead>
+											<tbody id="fail_list_body">
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<script src="{% static '/frame/vendor/echarts/echarts.common.min.js' %}"></script>
+<script src="{% static '/api/js/netutils.js' %}"></script>
+<script src="{% static '/api/js/moment.min.js' %}"></script>
+<script src="{% static '/api/js/daterangepicker.js' %}"></script>
+<script src="{% static '/api/js/index.js' %}"></script>
+<link rel="stylesheet/less" href="{% static '/api/css/daterangepicker.css' %}" />
+<link rel="stylesheet/less" href="{% static '/api/less/index.less' %}" /> {% endblock %}

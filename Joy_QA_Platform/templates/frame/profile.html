@@ -1,0 +1,112 @@
+{% extends 'frame/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+	个人中心
+{% endblock %}
+{% block mystyle_css %}
+	<style type="text/css">
+	.profile-right{
+    padding-bottom: 0px;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-left: 0px;
+	}
+	</style>
+{% endblock %}
+{% block body_block %}
+<div class="main">
+	<!-- MAIN CONTENT -->
+		<div class="main-content">
+			<div class="container-fluid">
+			<div class="panel">
+				<div class="panel-profile" >
+					<div class="clearfix">
+						<!-- LEFT COLUMN -->
+						<div class="profile-left " style="margin: 0; padding: 0; border: 0;">
+							<!-- PROFILE HEADER -->
+							<div class="panel" style="margin: 0; padding: 0; border: 0;">
+							<div class="profile-header">
+								<div class="overlay"></div>
+								<div class="profile-main"> 
+									<i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
+									<h3 class="name">{{user.first_name}}{{user.last_name}}</h3>
+								</div>
+							</div>
+							<!-- END PROFILE HEADER -->
+							<!-- PROFILE DETAIL -->
+							<div class="profile-detail">
+								<div class="profile-info">
+									<h3 class="panel-heading no-padding">个人资料</h3>
+									<ul class="list-unstyled list-justify">
+										<input name="username" id="username" type="text" class="form-control" placeholder="帐号：{{session_user_object.username}}" disabled="disabled">
+										<input name="email" id="email" type="text" class="form-control" placeholder="企业邮箱：{{session_user_object.email}}" disabled="disabled">
+										<input name="telephone" id="telephone" type="text" class="form-control" placeholder="手机号：{{session_user_object.telephone}}">
+										<input name="qq" id="qq" type="text" class="form-control" placeholder="QQ：{{session_user_object.qq}}">
+										<input name="wechat" id="wechat" type="text" class="form-control" placeholder="微信：{{session_user_object.wechat}}">
+									</ul>
+									<div class="text-center">
+										<div class="btn btn-default" id="editprofileajax">更新资料</div>
+									</div>
+								</div>
+							</div>
+							<!-- END PROFILE DETAIL -->
+						</div>
+						</div>
+						<!-- END LEFT COLUMN -->
+						<!-- RIGHT COLUMN -->
+						<div class="profile-right">
+							<!-- Departments  -->
+							<div class="panel panel-scrolling " style="margin: 0; padding: 0; border: 0;">
+								<div class="panel-heading ">
+									<h3 class="panel-heading no-padding">{{session_user_object.department}}</h3>
+									<div class="right">
+										<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
+										<button type="button" class="btn-remove"><i class="lnr lnr-cross"></i></button>
+									</div>
+								</div>
+									<table class="table table-striped" style="margin: 0; padding: 0;">		
+											<tr>
+												<th style="word-wrap: break-word; width: 10%;padding-right: 0;padding-left:15px;">姓名</th>
+												<th style="word-wrap: break-word; width: 25%;padding-right: 0;padding-left:1px;">企业邮箱</th>
+												<th style="word-wrap: break-word; width: 20%;padding-right: 0;padding-left:1px;">手机号</th>
+												<th style="word-wrap: break-word; width: 15%;padding-right: 0;padding-left:1px;">QQ</th>
+												<th style="word-wrap: break-word; width: 15%;padding-right: 0;padding-left:1px;">微信</th>
+												<th style="word-wrap: break-word; width: 15%;padding-right: 0;padding-left:1px;">最近登录</th>
+											</tr>					
+									</table>
+								<div class="panel-body no-padding">
+									<table class="table table-hover" style="table-layout:fixed;" >
+										</thead>
+										<tbody>	
+											{% get_user_departments session_user_object.department as user_departments_list %}
+											{% if user_departments_list %}
+											{% for user in user_departments_list %} 
+											<tr>
+												<td style="word-wrap: break-word; width: 10%;padding-right: 0;padding-left:15px;">{{user.first_name}}{{user.last_name}}</td>
+												<td style="word-wrap: break-word; width: 25%;padding-right: 0;padding-left:1px;">{{user.email}}</td>
+												<td style="word-wrap: break-word; width: 20%;padding-right: 0;padding-left:1px;">{{user.telephone}}</td>
+												<td style="word-wrap: break-word; width: 15%;padding-right: 0;padding-left:1px;">{{user.qq}}</td>
+												<td style="word-wrap: break-word; width: 15%;padding-right: 0;padding-left:1px;">{{user.wechat}}</td>
+												<td style="word-wrap: break-word; width: 15%;padding-right: 0;padding-left:1px;">{{user.last_login | date:"m月d日" }}</td>
+											</tr>													
+											{% endfor %}
+											{% endif %}
+									</table>
+								</div>
+								</div>
+								<div class="panel-footer">	
+										<div class="text-center">&darr;	&nbsp;下滑查看更多信息</div>
+								</div>
+							</div>
+							</div>
+							<!-- END Departments -->
+						</div>
+						<!-- END RIGHT COLUMN -->					
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+<!-- END MAIN CONTENT -->
+{% endblock %}

@@ -1,0 +1,192 @@
+{% extends 'frame/base.html' %}
+{% load staticfiles %}
+{% load frame_tags %}
+{% load apiauto_tags %}
+{% block title_block %}
+	测试集管理
+{% endblock %}
+{% block mystyle_css %}
+	<style type="text/css">
+	.todo-list > li p {
+    width: 100%;
+    padding: 15px 0 10px 35px;
+	}
+
+	.title{
+		color: #3287B2;
+	}
+	.todo-list > li .fancy-checkbox {
+    position: absolute;
+    top: 70px;
+    margin-top: -11px;
+	}
+	</style>
+{% endblock %}
+{% block body_block %}
+<div class="main">
+	<!-- MAIN CONTENT -->
+	<div class="main-content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-8">
+					<div class="panel">
+						<div class="panel-heading" style="padding-bottom: 0;">
+							<div class="right">
+								<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
+							</div>
+							<div class="custom-tabs-line tabs-line-bottom left-aligned">
+								<ul class="nav" role="tablist">
+								{% for project in project_list %}
+									<li {% if forloop.first %} class="active" {% endif %}><a id="li-{{project.project_name}}"  allchecked="False" href="#tab-bottom-{{project.project_name}}" role="tab" data-toggle="tab">{{project.project_name}}</a></li>	
+								{% endfor %}
+									<li id="newtestsuite" title="新建测试集"><a href="#tab-bottom-newtestsuite" role="tab" data-toggle="tab"><span class="lnr lnr-plus-circle"></span></a></li>		
+								</ul>
+							</div>
+						</div>
+						<div class="tab-content">
+						{% for project in project_list %}
+							<div class="tab-pane fade {% if forloop.first %} in active {% endif %}" id="tab-bottom-{{project.project_name}}" style="padding-top: 0;">
+								<div class="panel-body" style="padding-left: 0px; padding-right: 0px;">									
+									<ul class="list-unstyled todo-list">
+									{% sorttestsuites project.apitestsuite_set.all as testsuites %}	
+									{% for testsuite in testsuites %}
+										<li>
+											<label class="control-inline fancy-checkbox">
+												<input type="checkbox" name="{{testsuite.testsuite_name}}-checkbox" value="{{testsuite.id}}" class="{{project.project_name}}_all_checked"><span></span>
+											</label>
+											<p>
+												<span class="title" style="cursor:pointer;">{{testsuite.testsuite_name}}</span><br>
+												<span class="date">描述&nbsp;&#58;&nbsp;{{testsuite.testsuite_desc | default_if_none:"暂无"}}</span><br>
+												<span class="date">
+													Create By&nbsp;&#58;&nbsp;{{testsuite.testsuite_create_user.first_name}}{{testsuite.testsuite_create_user.last_name}}&nbsp;&nbsp;&nbsp;{{testsuite.testsuite_create_time}}
+												</span><br>
+												<span class="date">
+													Last Modify&nbsp;&#58;&nbsp;{{testsuite.testsuite_modify_user.first_name}}{{testsuite.testsuite_modify_user.last_name}}&nbsp;&nbsp;&nbsp;{{testsuite.testsuite_modify_time | default_if_none:"暂无"}}
+												</span><br>
+												<span class="date">
+													Last Run&nbsp;&#58;&nbsp;{{testsuite.testsuite_run_user.first_name}}{{testsuite.testsuite_run_user.last_name}}&nbsp;&nbsp;&nbsp;{{testsuite.testsuite_run_time | default_if_none:"暂无"}}
+												</span>																									
+											</p>
+
+											<!-- DETAILS  -->
+											{% sorttestcases testsuite.apitestcase_set.all as testcases %}									
+											<table class="table table-bordered" id="{{testsuite.testsuite_name}}-table" style="display: none">
+												<thead>
+													<tr>
+														<th style="padding-left: 5px; padding-right: 5px; width: 20%;">Testcase</th>
+														<th style="padding-left: 5px; padding-right: 5px; width: 20%;">Host</th>
+														<th style="padding-left: 5px; padding-right: 5px; width: 40%;">Url</th>
+														<th style="padding-left: 5px; padding-right: 5px; width: 20%;">Modify</th>
+													</tr>
+												</thead>
+												<tbody>
+													{% for testcase in testcases %}
+													<tr>
+														<td style="padding-left: 5px; padding-right: 5px; width: 20%;"><a href="{% url 'apiauto:testcasedetails' testcase.id %}"  target="_Blank" style="cursor:pointer;">{{testcase.testcase_name}}</a></td>
+														<td style="padding-left: 5px; padding-right: 5px; width: 20%;">{{testcase.host}}</td>
+														<td style="padding-left: 5px; padding-right: 5px; width: 20%;">{{testcase.url}}</td>
+														<td style="padding-left: 5px; padding-right: 5px; width: 20%;">{{testcase.testcase_modify_user}}</td>
+													</tr>
+													{% endfor %}
+												</tbody>
+											</table>
+											<!-- END DETAILS -->
+										</li>
+									{% endfor %}	
+									</ul>									
+								</div>
+								<div class="panel-footer" style="border: 0;">
+									<h5 style="display:inline-block; margin-right: 5px; cursor:pointer;"  class="edittestsuiteajax" name="edittestsuite" id="edittestsuite"><i class="lnr lnr-highlight"></i>编辑</h5>
+									<h5 style="display:inline-block; margin-right: 5px; cursor:pointer;"  class="runtestsuiteajax" name="runtestsuite"><i class="lnr lnr-rocket"></i>执行</h5>
+									<h5 style="display:inline-block; margin-right: 5px; cursor:pointer;float: right;"  class="toptestsuiteajax" name="toptestsuite"><i class="lnr lnr-arrow-up"></i>置顶</h5>
+									<h5 style="display:inline-block; margin-right: 5px; cursor:pointer;float: right;"  class="deletetestsuiteajax" name="deletetestsuite"><i class="lnr lnr-trash"></i>删除</h5>
+								</div>
+							</div>
+						{% endfor %}
+							<div class="tab-pane fade" id="tab-bottom-newtestsuite" style="padding-top: 0;">
+								<div class="panel-body">
+									<input type="text" class="form-control" placeholder="测试集名称" name="testsuite_name" id="testsuite_name"><br>                                                                         
+                                    <select class="form-control" id="testsuite_project" name="testsuite_project" required="true">
+                                        <option value="" disabled selected>&minus;&minus;&minus;所属项目&minus;&minus;&minus;</option>
+                                        {% for project in project_list %} 
+                                            <option value="{{project.id}}">{{project.project_name}}</option>
+                                        {% endfor %}
+                                    </select><br>                                                    
+									<textarea class="form-control" placeholder="测试集描述（选填）" rows="4" name="testsuite_desc" id="testsuite_desc"></textarea><br>
+								</div>
+								<div class="panel-footer" style="border: 0;">
+									<div class="text-center">
+										<div class="btn btn-default" id="createtestsuiteajax">创建</div>
+									</div>		
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END MAIN CONTENT -->
+{% endblock %}
+{% block script %}
+<script>
+$(document).ready(function(){
+	var liarray = new Array();
+	$("a[allchecked]").each(function(index,element){        
+        var aid = $(this).attr('id');
+        var projectname = $(this).text();
+
+        if(index==0){
+        	$(this).parents('li').attr({
+    			"id" : "firstindex_zebra_tips",
+    			"title" : "PC端双击可全选项目"
+  			});
+
+		    new $.Zebra_Tooltips($('#firstindex_zebra_tips'), {
+	    		'color': '#3c763d',
+	    		'background_color': '#dff0d8',
+	    		'border_color': '#d6e9c6',
+	    		'opacity': 0.8,
+		        'max_width':    300
+		    });
+        }
+
+
+		$("#"+aid).on("dblclick",function(){ 
+			if($(this).attr("allchecked") == 'False'){
+				$("."+projectname+"_all_checked").prop("checked", true);
+		 		$("."+projectname+"_all_checked").parents('li').addClass('completed');
+		 		$(this).attr("allchecked","True");
+		 		return;
+			}
+
+	
+			if($(this).attr("allchecked") == 'True'){
+				$("."+projectname+"_all_checked").prop("checked", false);
+		 		$("."+projectname+"_all_checked").parents('li').removeClass('completed');
+		 		$(this).attr("allchecked","False");
+		 		return;
+			}
+
+		})
+	})
+
+	    new $.Zebra_Tooltips($('#newtestsuite'), {
+    		'color': '#3c763d',
+    		'background_color': '#dff0d8',
+    		'border_color': '#d6e9c6',
+    		'opacity': 0.8,
+	        'max_width':    300
+	    });
+
+
+		$('.title').click( function() {
+			var detailstable = $(this).parent().next();
+			$(detailstable).toggle();
+	  	});
+
+});
+</script>
+{% endblock %}
+

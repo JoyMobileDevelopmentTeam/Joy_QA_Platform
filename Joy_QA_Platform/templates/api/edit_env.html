@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<div class="container-fluid" id="edit_container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">环境编辑</h4>
+			</div>
+			<div class="modal-body col-md-12" >
+				<div class="col-md-12 row_wrapper">
+					<label class="control-label col-md-2 text-primary" for="edit_project_name">环境名称：</label>
+					<div class="col-md-10">
+						<input type="text" class="form-control" id="edit_env_name" aria-describedby="inputSuccess3Status" name="edit_env_name" placeholder="请输入项目名称" value="">
+					</div>
+				</div>
+				<div class="col-md-12 row_wrapper">
+					<label class="control-label col-md-2 text-primary" for="edit_host_port">请求地址：</label>
+					<div class="col-md-10">
+						<input type="text" class="form-control" id="edit_host_port" aria-describedby="inputSuccess3Status" name="edit_host_port" placeholder="请输入请求地址" value="">
+					</div>
+				</div>
+				<div class="col-md-12 row_wrapper">
+					<label class="control-label col-md-2 text-primary" for="choose_project_edit">所属项目：</label>
+					<div class="col-md-10">
+						<select name="choose_project_edit" class="form-control" id="choose_project_edit">
+								<option value="-1">请选择</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-12 row_wrapper">
+					<label class="control-label col-md-2 text-primary" for="edit_desc">简要描述：</label>
+					<div class="col-md-10">
+						<input type="text" class="form-control" id="edit_desc" aria-describedby="inputSuccess3Status" name="edit_desc" placeholder="请输入参与的测试人员" value="">
+					</div>
+				</div>
+				<input id="edit_env_id" style="display: none;"/>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-primary" id="submit_change">提交更改</button>
+			</div>
+		</div>
+	</div>
+</div>

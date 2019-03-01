@@ -1,0 +1,285 @@
+{% extends 'frame/base.html' %}
+{% load staticfiles %}
+{% load frame_tags %}
+{% load apiauto_tags %}
+{% block title_block %}
+	用例克隆
+{% endblock %}
+{% block mystyle_css %}
+	<style type="text/css">
+		#apiparams{
+			padding-left: 10px;
+			padding-right: 10px;
+		}
+
+		.lnr-circle-minus:hover{
+			
+			cursor:pointer;
+			color:  red;
+			font-size:20px;
+		}
+
+		.lnr-circle-minus{
+		
+			cursor:pointer; 
+			font-size:20px;
+		}
+
+		#chevron-down-headers:hover{
+			color:  #00AAFF;
+			font-size:25px;
+		}
+
+		#chevron-down-headers{
+			font-size:25px;
+		}
+		#chevron-down-body:hover{
+			color:  #00AAFF;
+			font-size:25px;
+		}
+
+		#chevron-down-body{
+			font-size:25px;
+		}
+	</style>
+{% endblock %}
+
+{% block body_block %}
+<div class="main">
+	<!-- MAIN CONTENT -->
+	<div class="main-content">
+		<div class="container-fluid">
+			<div class="row">
+				<!-- APIparams -->
+					<div class="container-fluid" id="apiparamspanel">
+						<div class="row">
+							<div class="col-md-8">
+								<div class="panel">
+									<div class="panel-heading" style="padding-bottom: 0;">
+										<div class="right">
+											<button type="button" class="btn-toggle-collapse"><i class="lnr lnr-chevron-up"></i></button>
+											<button type="button" class="" onClick="hideapiparamspanel(this)"><i class="lnr lnr-cross"></i></button>
+										</div>
+									</div><br>
+					
+									<div class="panel-body" id="apiparams">
+										<div class="input-group">
+											<span class="input-group-btn"><button class="btn btn-default" type="button" value="{{testcase.method|upper}}" id="METHOD">{{testcase.method|upper}}</button></span>
+											<input id="testcase_url" class="form-control" type="text" placeholder="URL（选填）" value='{{testcase.url|default_if_none:""}}'>
+											<span class="input-group-btn"  id="testcaseclonesaveajax"><button class="btn btn-default" type="button">克隆</button></span>
+										</div>
+
+										<div class="custom-tabs-line tabs-line-bottom left-aligned">
+											<ul class="nav" role="tablist">
+												<li ><a href="#tab-bottom-left1" role="tab" data-toggle="tab">Headers</a></li>
+												<li ><a href="#tab-bottom-left2" role="tab" data-toggle="tab">Body</a></li>
+												<li class="active"><a href="#tab-bottom-left3" role="tab" data-toggle="tab">General</a></li>
+												<li ><a href="#tab-bottom-left4" role="tab" data-toggle="tab">Info</a></li>
+											</ul>
+										</div>
+								
+										<div class="tab-content">
+										<div class="tab-pane fade" id="tab-bottom-left1" style="padding: 0px;">				
+											<br>
+											<table class="table table-bordered" id="tableshow_headers">
+												<thead>
+													<tr>
+														<th style="padding-left: 8px;">key</th>
+														<th>Value</th>
+														<th>Description</th>
+														<th style="width: 1px; padding-left: 8px; padding-right: 8px;" >Del</th>
+													</tr>
+												</thead>
+												<tbody>
+												{% jsonstrtodict testcase.headers_param as headers %}	
+												{% for key,value in headers.items %} 
+													<tr>
+														<td name="key" contentEditable="true" style="padding-left: 8px;">{{ value.key }}</td>
+														<td name="Value" contentEditable="true">{{ value.value }}</td>
+														<td name="Description" contentEditable="true">{{ value.desc }}</td>
+														<td name="Delete" style="width: 1px; padding-right: 8px; padding-left: 8px;"><i class="lnr lnr-circle-minus" onClick="deltr(this)"></i></td>
+													</tr>													   
+												{% endfor %}  
+												</tbody>
+											</table>
+											<div class="text-center" style="cursor:pointer;" id="chevron-down-headers"><i class="lnr lnr-chevron-down"></i></div>
+										</div>
+										<div class="tab-pane fade" id="tab-bottom-left2" style="padding: 0px;">
+											<br>
+											<table class="table table-bordered" id="tableshow_body">
+												<thead>
+													<tr>
+														<th style="padding-left: 8px;">key</th>
+														<th>Value</th>
+														<th>Description</th>
+														<th style="width: 1px; padding-left: 8px; padding-right: 8px;" >Del</th>
+													</tr>
+												</thead>
+												<tbody>
+												{% jsonstrtodict testcase.body_param as bodys %}	
+												{% for key,value in bodys.items %} 
+													<tr>
+														<td name="key" contentEditable="true" style="padding-left: 8px;" >{{ value.key }}</td>
+														<td name="Value" contentEditable="true">{{ value.value }}</td>
+														<td name="Description" contentEditable="true">{{ value.desc }}</td>
+														<td name="Delete" style="width: 1px; padding-right: 8px; padding-left: 8px;"><i class="lnr lnr-circle-minus" onClick="deltr(this)"></i></td>
+													</tr>													   
+												{% endfor %}  												
+												</tbody>
+											</table>
+											<div class="text-center" style="cursor:pointer;" id="chevron-down-body"><i class="lnr lnr-chevron-down"></i></div>
+											<table id="tablebackup" style="display: none">
+												<tbody>
+													<tr>
+														<td name="key" contentEditable="true" style="padding-left: 8px;"></td>
+														<td name="Value" contentEditable="true"></td>
+														<td name="Description" contentEditable="true"></td>
+														<td name="Delete" style="width: 1px; padding-right: 8px; padding-left: 8px;"><i class="lnr lnr-circle-minus" onClick="deltr(this)"></i></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="tab-pane fade in active" id="tab-bottom-left3" style="padding: 0px;"><br>	
+											<div class="input-group">
+												<span class="input-group-btn" style="width: 20%;" ><input id="testcase_name" class="form-control" type="text" placeholder="测试用例名" value="{{testcase.testcase_name|default_if_none:'暂无'}}"></span>
+												<input id="testcase_desc" class="form-control" type="text" placeholder="测试用例描述（选填）" value="{{testcase.desc|default_if_none:'暂无描述'}}">
+												<span class="input-group-btn"><input id="testcase_expectcode" class="form-control" type="text" placeholder="期望" value="{{testcase.expectcode}}" style="width: 65px;"></span>
+											</div><br>	
+											<div class="input-group">
+												<span class="input-group-btn"><button class="btn btn-default" type="button" value="{{testcase.protocol|upper}}" id="PROTOCOL">{{testcase.protocol|upper}}</button></span>
+												<input id="testcase_host" class="form-control" type="text" placeholder="HOST" value="{{testcase.host}}">
+												<span class="input-group-btn"><input id="testcase_port" class="form-control" type="text" placeholder="PORT" value="{{testcase.port}}" style="width: 65px;"></span>
+											</div><br>												
+
+	                                   		<div id="testcase_select" name="name"></div><br>
+	                                   		
+		                                    <select class="form-control" id="testcase_apideveloper" name="testcase_apideveloper" required="true">
+	                                        	<option value="" disabled selected>&minus;&minus;&minus;开发人员&minus;&minus;&minus;</option>
+	                                        {% for developer in apidevelopers %}                       
+	                                            <option value="{{developer.id}}" {% ifequal developer.id testcase.apideveloper.id %} selected="true" {% endifequal %}>{{developer.username}}</option>
+	                                        {% endfor %} 
+	                                   		</select><br>	                   
+		                                    <select class="form-control" id="testcase_function" name="testcase_function" required="true">
+	                                        	<option value="" disabled selected>&minus;&minus;&minus;参数定制&minus;&minus;&minus;</option>                      
+	                                   			{% getcustomizefunctions as functionlist %}
+												{% for item in functionlist %}                     
+	                                            	<option value="{{item.id}}" {% ifequal item.id testcase.function.id %} selected="true" {% endifequal %}>{{item.functionname}} : {{item.name}}</option>
+	                                            {% endfor %} 
+	                                   		</select><br>	                              
+										</div>
+										<div class="tab-pane fade" id="tab-bottom-left4" style="padding: 0px;">
+											<div class="panel-body">
+												<ul class="list-unstyled list-justify">
+													<li>克隆用例ID: <span>{{testcase.id}}</span></li>
+													<li>所属项目: <span>{{testcase.testcase_testsuite.testsuite_project}}</span></li>
+													<li>测试集: <span>{{testcase.testcase_testsuite}}</span></li>
+													<li>上次修改者: <span>{{testcase.testcase_modify_user.first_name}}{{testcase.testcase_modify_user.last_name}}</span></li>
+													<li>上次修改时间: <span>{{testcase.testcase_modify_time}}</span></li>
+													<li>上次执行者: <span>{{testcase.testcase_run_user.first_name}}{{testcase.testcase_run_user.last_name|default:'尚未执行'}}</span></li>
+													<li>上次执行时间: <span>{{testcase.testcase_run_time|default:'尚未执行'}}</span></li>
+													<li>上次执行标签: <span>{{latestresult.tag|default:'尚未执行'}}</span></li>
+													
+													{% getresulttype latestresult.result as resulttype %}
+													{% getresultbackground latestresult.result as resultbackground %}
+
+													<li>执行结果: <span class="label label-{{resultbackground|default_if_none:'info'}}">{{resulttype|default_if_none:'init'|upper}}</span></li>
+													<li>原因: 
+														<div class="alert alert-{{resultbackground|default_if_none:'info'}} alert-dismissible" role="alert">		
+															<i class="fa fa-{{resultbackground|default_if_none:'info'}}-circle"></i> 
+															{{latestresult.reason|default:'暂无'}}
+														</div>
+													</li>										
+												</ul>
+											</div>			
+										</div>										
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				<!-- APIparams -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END MAIN CONTENT -->
+</div>
+{% endblock %}
+{% block script %}
+<script>
+	$("#PROTOCOL").click(function() {
+		var ProtocolValue = $('#PROTOCOL').val();
+				
+		if (ProtocolValue == 'PROTOCOL') {
+			$("#PROTOCOL").text("HTTP");
+			$("#PROTOCOL").val("HTTP");
+		};
+
+		if (ProtocolValue == 'HTTP') {
+			$("#PROTOCOL").text("HTTPS");
+			$("#PROTOCOL").val("HTTPS");
+		};
+
+		if (ProtocolValue == 'HTTPS') {
+			$("#PROTOCOL").text("PROTOCOL");
+			$("#PROTOCOL").val("PROTOCOL");
+		};
+
+	});    
+</script>
+
+<script>
+	$("#METHOD").click(function() {
+		var MethodValue = $('#METHOD').val();
+				
+		if (MethodValue == 'METHOD') {
+			$("#METHOD").text("GET");
+			$("#METHOD").val("GET");
+		};
+
+		if (MethodValue == 'GET') {
+			$("#METHOD").text("POST");
+			$("#METHOD").val("POST");
+		};
+
+		if (MethodValue == 'POST') {
+			$("#METHOD").text("METHOD");
+			$("#METHOD").val("METHOD");
+		};
+
+	});    
+</script>
+
+<script>
+	$(function () {
+		$("#chevron-down-headers").click(function () {
+			$("#tablebackup tbody tr").clone().appendTo("#tableshow_headers tbody");   
+		});
+
+		$("#chevron-down-body").click(function () {
+			$("#tablebackup tbody tr").clone().appendTo("#tableshow_body tbody");   
+		});
+	});
+
+
+	function deltr(opp) {
+		$(opp).parent().parent().remove();
+	}
+</script>
+
+<script>
+	var all_project_testsuites_list = {{ all_project_testsuites_list|safe }};
+	var selected_testsuite_id = {{ testcase.testcase_testsuite.id|safe }};
+
+	$('#testcase_select').selectivity({
+	    allowClear: false,
+	    // multiple:true,
+	    items: all_project_testsuites_list,
+	    placeholder: '---所属测试集---',
+	    value:selected_testsuite_id,
+	});
+
+</script>
+{% endblock %}

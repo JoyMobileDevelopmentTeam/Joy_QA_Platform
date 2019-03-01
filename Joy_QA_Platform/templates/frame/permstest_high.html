@@ -1,0 +1,43 @@
+{% extends 'frame/base.html' %}
+{% load staticfiles %}
+{% block title_block %}
+	权限
+{% endblock %}
+{% block body_block %}
+<div class="main">
+	<!-- MAIN CONTENT -->
+	<div class="main-content">
+		<div class="container-fluid">
+			{% if perms.frame.permstest_high_pagetitle %}
+			<h3 class="page-title">
+			权限高
+			</h3>
+			{% endif %}
+			<div class="row">
+				<div class="col-md-8">
+					<!-- PANEL HEADLINE -->
+					<div class="panel panel-headline">
+						<div class="panel-heading">
+							<h3 class="panel-title">权限高</h3>
+							<p class="panel-subtitle">
+							权限高
+							{% if perms.frame.permstest_high_viewmsg %}
+								{{permshighmsg}}
+							{% endif %}
+							</p>
+						</div>
+						<div class="panel-body">
+							<h4>权限高</h4>
+							{% if perms.frame.permstest_high_bodyp %}
+							<p>权限高</p>
+							{% endif %}
+						</div>
+					</div>
+					<!-- END PANEL HEADLINE -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END MAIN CONTENT -->
+{% endblock %}

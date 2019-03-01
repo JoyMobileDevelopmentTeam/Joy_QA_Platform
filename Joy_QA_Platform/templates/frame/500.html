@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" class="fullscreen-bg">
+	<head>
+		<title>
+		卓游测试平台 | 500
+		</title>
+		{% include './base_head.html' %}
+	</head>
+	<body>
+		<!-- WRAPPER -->
+		<div class="auth-box lockscreen">
+			<div class="main-content">
+			<div class="container-fluid">
+			<h1 class="page-title">Error 500 </h1>
+			<div class="row ">
+					<div class="panel">
+						<div class="panel-heading" >
+							<h1 class="panel-title">Internal Server Error!</h1>
+							<div class="right" style="text-align: right;">
+								<button type="button" class="btn-toggle-collapse "><i class="lnr lnr-chevron-up"></i></button>
+							</div>
+						</div>
+						<div class="panel-body no-padding bg-primary text-center">
+							<div class="padding-top-30 padding-bottom-30">
+								<span class="lnr lnr-warning fa-5x"></span>
+								<p>服务器内部错误!</p>
+								<p>请联系卓游测试平台管理员: wuwei@joygames.cc </p>
+							</div>
+						</div>
+						<div class="panel-footer">
+							<span>
+							<a style="text-align: left; float:left;" href="javascript:history.go(-1);"><h5>&larr;返回上一页</h5></a>
+							<a style="text-align: right;" href="{% url 'frame:login' %}"><h5>前往登录页&rarr;</h5></a>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END WRAPPER -->
+	
+		<!-- Javascript -->
+		{% include './base_js.html' %}
+	</body>
+</html>

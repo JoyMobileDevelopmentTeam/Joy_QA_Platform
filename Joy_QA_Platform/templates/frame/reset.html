@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" class="fullscreen-bg">
+<head>
+    <title>
+        卓游测试平台 | 重置密码
+    </title>
+    {% include './base_head.html' %}
+    <!-- Javascript -->
+    {% include './base_js.html' %}
+    <!-- Colors -->
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.css" rel="stylesheet">
+<style type="text/css">
+#reset{
+    width: 600px;height: 550px;
+    margin: 0 auto;
+    border-radius: 20px;
+    background-color: white;
+    animation-duration: 1.5s;
+}
+#reset_submit{
+  width: 450px;height: 50px;
+  font-size: 20px;letter-spacing: 2px;
+  background-color: #34416d;color:white;
+  margin: 0 auto;margin-top: 30px;
+  border-radius: 10px;border: 0px;
+  box-shadow: 0 0 20px #2b333e;
+}
+#email,#password,#repassword,#emailcapture{
+  width: 400px;height: 50px;
+  display: block;
+  margin: 0 auto;margin-top: 5px;padding-top: 13px;
+  color: #2b333e;
+  border:#2b333e;border-bottom: 1px solid #2b333e;
+  font-size: 15px;letter-spacing: 1px;line-height: 40px;
+}
+#emailcapture{
+    width: 200px;float: left;
+}
+.input-group-addon{
+  color:#2b333e;background-color: white;
+  font-size: 35px;
+  border: 0px;padding-left: 72px;padding-top: 15px;
+}
+#get_reset_captcha{
+    font-size: 16px;float: right;
+    padding:0px;margin-right: 80px;margin-top: 12px;
+    width: 150px;height: 40px;
+    line-height: 40px;border-radius: 5px;
+    box-shadow:0 0 10px #34416d;
+}
+#resettitle{
+ text-align: center;line-height: 110px;font-size: 35px;
+  color:white;background-color: #23232e;
+  border-top-right-radius:20px;
+  border-top-left-radius:20px;
+  letter-spacing: 3px;
+  box-shadow: 0 0 10px #2b333e;
+}
+.has-error .input-group-addon{
+  color: #2b333e;background-color: white;
+}
+.bottom a{
+    color: #2b333e;
+}
+.bottom{
+    margin-right: 80px;
+}
+</style>
+</head>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/animate.css@3.5.2/animate.min.css">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+<body background="http://img.1ppt.com/uploads/allimg/1511/1_151125155414_1.jpg" style="background-size: cover;opacity: 0.8;transform: scale(0.8);">
+            <div id="reset">
+                <p id="resettitle">重置密码</p>
+                    <form class="form-header" role="form" method="POST" id="reset_form">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="lnr lnr-envelope"></i></span>
+                                <label for="reset-email" class="control-label sr-only">邮箱账号</label>
+                                <input type="text" class="form-control" placeholder="企业邮箱" name="email" id="email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="lnr lnr-text-format"></i></span>
+                                <label for="reset-password" class="control-label sr-only">密码</label>
+                                <input type="password" class="form-control" placeholder="新密码" name="password"
+                                       id="password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="lnr lnr-text-format"></i></span>
+                                <label for="reset-repassword" class="control-label sr-only">确认密码</label>
+                                <input type="password" class="form-control" placeholder="确认密码" name="repassword"
+                                       id="repassword">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="lnr lnr-text-size"></i></span>
+                                <label for="reset-emailcapture" class="control-label sr-only">邮箱验证码</label>
+                                <input type="text" class="form-control" placeholder="邮箱验证码" name="emailcapture"
+                                       id="emailcapture">
+                                <span id="get_reset_captcha" class="input-group-addon"
+                                      style="background: #34416d; color: white; cursor:pointer;">
+                                    获取邮箱验证码
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group last">
+                            <input id="reset_submit" class="btn btn-primary btn-lg btn-block"
+                                   value="重置密码">
+                        </div>
+                        <div class="bottom" align="right">
+                            <span class="helper-text" id="loginbutton"><a href="/frame/login/">帐号登陆&nbsp;</a></span>
+                            <span class="helper-text" id="resetpwdbutton"><a href="/frame/register/">&nbsp;帐号注册</a></span>
+                        </div>
+
+
+                        <div id="tips" class="registermsg" style="text-align: center;">
+                            <div id="success" class="alert alert-success alert-dismissible" role="alert"
+                                 style="display: none">
+                                <i class="fa fa-check-circle"></i>
+                            </div>
+                            <div id="warning" class="alert alert-warning alert-dismissible" role="alert"
+                                 style="display: none">
+                                <i class="fa fa-warning"></i>
+                            </div>
+                            <div id="danger" class="alert alert-danger alert-dismissible" role="alert"
+                                 style="display: none">
+                                <i class="fa fa-times-circle"></i>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var h;
+        var mt;
+        function getHeight(){
+            h = window.innerHeight;
+            mt = (h-530)/2;
+            h = h-mt + 'px';
+            document.getElementById('reset').style.marginTop = mt + 'px'
+            $("body").height(h)
+        }
+        setInterval(getHeight,1);
+        $('#reset').addClass('animated bounceInDown');
+        $("#reset_submit").mouseover(function(){
+            document.getElementById('reset_submit').style.backgroundColor = "#856779";
+            document.getElementById('reset_submit').style.boxShadow = "0 0 20px #856779";
+        })
+        $("#reset_submit").mouseout(function(){
+            document.getElementById('reset_submit').style.backgroundColor = "#34416d";
+        })
+    })
+</script>
+<!-- END TOASTR -->
+<script src="{% static '/frame/js/reset.js' %}"></script>
+</body>
+</html>

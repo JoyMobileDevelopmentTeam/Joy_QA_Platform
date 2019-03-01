@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+
+	<!-- HEAD -->
+	<head>
+		<title>
+			卓游测试平台 | {% block title_block %}默认{% endblock %}
+		</title>
+		{% include './base_head.html' %}
+		{% include './base_js.html' %}
+		<link href="https://cdn.bootcss.com/ionicons/3.0.0/css/ionicons.min.css" rel="stylesheet">
+		{% block mystyle_css %}{% endblock %}
+	</head>
+	<!-- END HEAD -->
+
+	<body>
+
+		<!-- WRAPPER -->
+		<div id="wrapper">
+			<!-- NAVBAR -->
+			{% include './base_navbar.html' %}
+			<!-- END NAVBAR -->
+
+			<!-- LEFT SIDEBAR -->
+			{% include './base_sidebar.html' %}
+			<!-- END LEFT SIDEBAR -->
+			
+			<!-- MAIN -->
+			{% block body_block %}<!--body_block -->{% endblock %}
+			<!-- END MAIN -->
+
+			<!-- FOOTER -->
+			{% include './base_footer.html' %}
+			<!-- END FOOTER -->
+		</div>
+		<!-- END WRAPPER -->
+		<script src="{% static '/frame/vendor/plugins/less.min.js' %}"></script>
+ 		
+		<!-- <script>
+		    new $.Zebra_Tooltips($('#onlineusers_button'), {
+	    		'color': '#3c763d',
+	    		'background_color': '#dff0d8',
+	    		'border_color': '#d6e9c6',
+	    		'opacity': 0.8,
+		        'max_width':    300
+		    });
+		</script> -->
+        <script src="{% static '/frame/js/user.js' %}"></script>
+	</body>
+
+</html>
