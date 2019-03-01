@@ -1,0 +1,22 @@
+[2019-03-01 10:43:55,203] [ERROR] [process]  
+str(Exception):		<class 'Exception'>
+str(e):				Cannot determine content type
+repr(e):			WrongAppError('Cannot determine content type',)
+e.args:				('Cannot determine content type',)
+traceback.format_exc():
+Traceback (most recent call last):
+  File "/Users/joygames/SVN/QA/Joy_QA_Platform/Joy_QA_Platform/activator.py", line 35, in process
+    result = execute_views(fun, request=request, app=app, index=index)
+  File "/Users/joygames/SVN/QA/Joy_QA_Platform/Joy_QA_Platform/activator.py", line 64, in inner
+    return func(*args, **kwargs)
+  File "/Users/joygames/SVN/QA/Joy_QA_Platform/Joy_QA_Platform/activator.py", line 77, in execute_views
+    result = fun(request, index) if index else fun(request)
+  File "/Users/joygames/SVN/QA/Joy_QA_Platform/ApiManager/views.py", line 21, in project_list
+    return operation_project.project_list(request)
+  File "/Users/joygames/SVN/QA/Joy_QA_Platform/ApiManager/operations/operation_project.py", line 52, in project_list
+    objects = get_objects_for_user(request.user, AUTH_VIEW).all()
+  File "/usr/local/var/pyenv/versions/3.6.5/lib/python3.6/site-packages/guardian/shortcuts.py", line 485, in get_objects_for_user
+    raise WrongAppError("Cannot determine content type")
+guardian.exceptions.WrongAppError: Cannot determine content type
+
+[2019-03-01 10:44:02,794] [WARNING] [log_message]  "GET /static/assets/img/favicon.ico HTTP/1.1" 404 1695
