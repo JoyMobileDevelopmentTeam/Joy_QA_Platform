@@ -1,6 +1,10 @@
 import os, shutil, time
-from Joy_QA_Platform import configs
 filename_list = ['config','debugtalk.py','locustfile.py','locust.yml']
+
+# locust 从机下载配置
+LOCUST_DOWNLOAD_URL  = ''
+LOCUST_DOWNLOAD_USER = ''
+LOCUST_DOWNLOAD_PWD  = ''
 
 def get_curr_dir():
 	return os.getcwd()
@@ -9,7 +13,7 @@ def download_files():
 	for file in filename_list:
 		QAPlatformPath = get_curr_dir()
 		dest = os.path.join(QAPlatformPath,file)
-		cmd = "wget " + configs.LOCUST_DOWNLOAD_URL + file + " --http-user=" + configs. LOCUST_DOWNLOAD_USER + " --http-passwd=" + configs.LOCUST_DOWNLOAD_PWD + " -O " + str(dest)
+		cmd = "wget " + LOCUST_DOWNLOAD_URL + file + " --http-user=" + LOCUST_DOWNLOAD_USER + " --http-passwd=" + LOCUST_DOWNLOAD_PWD + " -O " + str(dest)
 		print(cmd)
 		os.system(cmd)
 		if os.path.exists(dest):
