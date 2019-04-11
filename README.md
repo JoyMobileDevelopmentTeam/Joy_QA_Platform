@@ -142,3 +142,4 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
         
 ## 技术交流
   QQ群：735923042
+  ![](http://jgsdk.oss-cn-shanghai.aliyuncs.com/QA平台群二维码.png)
