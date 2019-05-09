@@ -38,9 +38,9 @@ AUTH_ADD_PROJECT = 'ApiManager.add_projectinfo'
 AUTH_ADD_MODULE = 'ApiManager.add_moduleinfo'
 AUTH_ADD_TASK = 'ApiManager.add_taskinfo'
 AUTH_ADD_CASE = 'ApiManager.add_testcaseinfo'
-AUTH_DELETE = 'delete_project'
-AUTH_UPDATE = 'update_project'
-AUTH_VIEW   = 'view_project'
+AUTH_DELETE = 'ApiManager.delete_project'
+AUTH_UPDATE = 'ApiManager.update_project'
+AUTH_VIEW   = 'ApiManager.view_project'
 
 # 邮箱后缀限制
 EMAIL_SUFFIX = ''
