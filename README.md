@@ -75,7 +75,7 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
 10. 生成数据库表
   命令行窗口切换到项目根目录，执行Django相关命令生成表结构,请查看数据库，确认表结构正确创建
 ```
-  分应用先后执行 makemigrations和migrate
+  分应用先后执行 makemigrations和migrate --- 重要！！！
   python manage.py makemigrations frame
   python manage.py makemigrations ApiManager
   python manage.py migrate frame
