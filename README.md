@@ -85,6 +85,7 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
 ```
   python manage.py runserver 0.0.0.0:8000
 ```
+  FQA:https://stackoverflow.com/questions/50346326/programmingerror-relation-django-session-does-not-exist/50346820
 12. 启动Celery，用于执行用例任务
   在项目根目录执行命令
 ```
