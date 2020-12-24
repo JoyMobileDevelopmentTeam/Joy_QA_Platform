@@ -1,4 +1,4 @@
-# Joy_QA_Platform
+# Joy_QA_Platform（目前已经停止维护！）
 基于HttpRunner、Locust、Django Web框架的接口功能测试/压力测试/监控平台
 
 ## Design Philosophy
