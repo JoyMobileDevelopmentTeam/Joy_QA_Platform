@@ -146,6 +146,3 @@ Joy_QA_Platform-QA测试平台基于Django搭建，内嵌*httprunner*（用于�
 
         主、从机之间的压测用例等文件同步使用了Linux的wget功能，并依赖Nginx的权限控制功能保证文件安全性，请合理配置私密文件相关Nginx代理的权限。
         
-## 技术交流
-  QQ群：735923042
-  ![](http://jgsdk.oss-cn-shanghai.aliyuncs.com/QA平台群二维码.png)
